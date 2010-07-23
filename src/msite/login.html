@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+	<head>
+		<title xmlns="http://www.w3.org/1999/xhtml">Log In</title>
+		<meta xmlns="http://www.w3.org/1999/xhtml" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+		<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" media="screen">
+				  @import "styles/default/style.css";
+		</style>
+		<link rel="apple-touch-icon" href="" />
+		<link rel="shortcut icon" href="" />
+	</head>
+
+	<body id="loginPage">
+
+		<div id="loginPageHeader" class="section_header">
+			<div class="brandTop"><span class="brandtextT">University</span></div>
+		</div>
+		<div id="login_tab_header">
+			<div id="login_subheaderNoTabs"></div>
+		</div>
+		<div id="loginFormSection" class="section_content">
+			<!-- Loading Message -->
+			<div class="messageContainer" id="loadingMessageContainer">
+				<span class="ajaxLoading">Loading...</span>
+			</div>
+			
+			<div class="errorMessageContainer" id="errorContainer" style="display:none;">
+				<div class="errorMessage">&nbsp;</div>
+			</div>
+			
+			<div id="loginFormContainer" class="authForm" style="display:none;">
+				<form method="GET" name="" id="loginForm" action="submit">
+				<div class="authFields">
+					<span class="formlabel">Username:</span><br/>
+					<input class="inputtext" type="text" name="userId" id="userId" size="22" autocapitalize="off"/><br/>
+					<span class="formlabel">Password:</span><br/>
+					<input class="inputtext" type="password" name="password" id="password" size="22" autocapitalize="off"/><br/>
+				
+					<span class="authText"><input type="checkbox" name="RememberMe" id="rememberMe" checked="true">
+					<label for="rememberMe">Remember me</label></span>
+				</div>
+				<br/>
+				</form>
+				<a class="authButtons" id="signInBtn" href="javascript:void(0);">Sign In</a>
+				<span id="loadingImage" style="display:none;" class="ajaxLoading">&nbsp;</span>
+			</div>
+			
+			<div class="messageContainer" id="registerMessage" style="display:none;">
+				<span class="messageText">Don't know your user name and password? <a href="javascript:void(0);" id="registerLink">Click here</a> to get an access link emailed to you.</span>
+			</div>
+		</div>
+		<div id="loginPageFooter" class="section_footer">
+			<div class="brandBottom"><span class="brandtextB">University</span></div>
+		</div>
+		
+		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>
+
+ 		<script type="text/javascript" src="scripts/ServiceDomains.js"></script>
+		<script type="text/javascript" src="scripts/ThirdParty/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="scripts/ThirdParty/json2.js"></script>
+			    
+		<!-- Package:CombineScripts outputName="login_{hash}.js" outputDirectory="scripts" -->		
+        <script type="text/javascript" src="scripts/VariableValidator.js"></script>
+        <script type="text/javascript" src="scripts/Utils.js"></script>
+        <script type="text/javascript" src="scripts/CrossDomainInitializer.js"></script>
+        <script type="text/javascript" src="scripts/EventDispatcher.js"></script>
+	    <script type="text/javascript" src="scripts/Events/CustomEvent.js"></script>
+	    <script type="text/javascript" src="scripts/Events/DomainStatusEvent.js"></script>
+        <script type="text/javascript" src="scripts/ValueObjects/AjaxRequestHeader.js"></script>
+        <script type="text/javascript" src="scripts/ValueObjects/CrossFrameMessage.js"></script>
+        <script type="text/javascript" src="scripts/ServiceManagers/AjaxManager.js"></script>
+        <script type="text/javascript" src="scripts/ServiceManagers/SessionManager.js"></script>
+        <script type="text/javascript" src="scripts/ViewManagers/ClientStringManager.js"></script>
+ 		<!-- End Package:CombineScripts -->
+
+
+		<script type="text/javascript">
+		
+			
+			var crossDomainInitializer;
+			var sessionManager;
+			var clientStringManager;
+			var cs;
+			
+			$(document).ready(function()
+			{
+				crossDomainInitializer = CrossDomainInitializer.getInstance();
+			
+				sessionManager = SessionManager.getInstance();
+				sessionManager.serviceLocation = serviceDomains[SERVICE_DOMAIN_PROXY];
+				
+				clientStringManager = ClientStringManager.getInstance();
+				cs = getQueryStringValue("cs");
+			
+				applyBrandingToPage($("head"), cs);
+				if (cs == null || cs == undefined || cs == "")
+				{
+					$("#loadingMessageContainer").hide();
+					$("#errorContainer div.errorMessage").html("The page cannot be found!");
+					$("#errorContainer").show();
+				}
+				else
+				{
+					clientStringManager.setClientString(cs);
+					crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
+					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_READY, crossDomainReadyHandler, true);
+					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_ERROR, crossDomainErrorHandler, true);
+					crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", serviceDomains[SERVICE_DOMAIN_PROXY]);
+					
+					
+					$("#registerLink").bind("click", registerLinkClickHandler);
+					// assign actions to the sign in button
+					$("#signInBtn").bind("click", signInClickHandler);
+					// listen for form submit events, and forward them to the sign in click handler
+					$("#loginForm").bind("submit", function(p_event)
+					{
+						p_event.preventDefault();
+						signInClickHandler();
+					});
+				}
+			});
+			
+			/**
+				Redirect the user to the register page
+			*/
+			var registerLinkClickHandler = function()
+			{
+				window.location.href = window.location.protocol + "//" + document.domain + "/register.html?cs=" + cs;
+			};
+			
+			/**
+				When the page is fully initialized, present the login form.
+			*/
+			var crossDomainReadyHandler = function()
+			{
+				$("#loadingMessageContainer").hide();
+				$("#loginFormContainer").show();
+				$("#registerMessage").show();
+			};
+			
+			/**
+				If the cross domain file never loaded, show an error message.
+			*/
+			var crossDomainErrorHandler = function()
+			{
+				$("#loadingMessageContainer").hide();
+				$("#errorContainer div.errorMessage").html("Application content is not available at this time. Please try again later and if the problem persists, contact the helpdesk.");
+				$("#errorContainer").show();
+			};
+			
+			/**
+				When the user clicks the login button, attempt to log them in
+			*/
+			var signInClickHandler = function()
+			{
+				if ($("#userId").val == "" || $("#password").val() == "")
+				{
+					$("#errorContainer .errorMessage").html("Username and password are required.");
+					$("#errorContainer").show();
+					return;
+				}
+				$("#errorContainer").hide();
+				$("#loadingImage").show();
+				$("#signInBtn").hide();
+				
+				clientStringManager.setClientString(cs);	// just in case the user clears their cookies after page loads
+				// get only the client string part of the entire client sort string (the text before the first ".")
+				var epClientString = cs.split(".", 1)[0];
+				sessionManager.logIn(epClientString, $("#userId").val(), $("#password").val(), $("#rememberMe")[0].checked, signInHandler);
+			};
+			
+			/**
+				Handler for a response to athorize a user. If a user was authorized successfully, 
+				redirect them to the main page. Otherwise show them an error.
+				@param		{Boolean}	p_isLoggedIn	true if the user was authorized successfully, false otherwise
+				@param		{String}	p_errorCode		the HTTP error code on the response
+			*/
+			var signInHandler = function(p_isLoggedIn, p_errorCode)
+			{
+				if (p_isLoggedIn)
+				{
+					eraseCookie("currentPage");
+					$("#registerMessage").hide();
+					$("#loginFormContainer").hide();
+					$("#loadingMessageContainer span.ajaxLoading").html("Logging in...");
+					$("#loadingMessageContainer").show();
+					window.location.href = window.location.protocol + "//" + document.domain + "/index.html";
+					return;
+				}
+				//not logged in, what went wrong?
+				switch(p_errorCode)
+				{
+					case "400":
+						// if the response was a "bad request", show message that login credentials were incorrect.
+						$("#errorContainer div.errorMessage").html("Your username and/or password were incorrect.");
+						break;
+					case "500":
+						// if the response was a 500 "internal server error", show a message of the likely cause.
+						$("#errorContainer div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check your link and login information and try again.");
+						break;
+					default:
+						// otherwise show a general message that the communication was unsuccessful.
+						$("#errorContainer div.errorMessage").html("Unable to contact the server. Please try again in a few minutes.");
+				}			
+				$("#errorContainer").show();
+				$("#signInBtn").show();
+				$("#loadingImage").hide();
+				
+			};
+			
+		</script>
+
+	</body>
+</html>

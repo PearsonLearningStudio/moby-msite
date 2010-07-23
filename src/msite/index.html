@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+	<head>
+	<title>Happenings</title>
+	<meta xmlns="http://www.w3.org/1999/xhtml" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+	<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" media="screen">
+			  @import "styles/default/style.css";
+    </style>
+    <link rel="apple-touch-icon" href="" />
+	<link rel="shortcut icon" href="" />
+</head>
+
+	<body id="indexBody">
+		
+		<div class="section_header">
+			<div class="brandTop"><span class="brandtextT">University</span></div>
+			<div class="module_mainNav" id="mainNav">
+				<a id="thingsToKnow" class="navS" href="javascript:void(0);"><span>Happenings</span></a>
+				<a id="discussions" class="navNS" href="javascript:void(0);"><span>Discussions</span></a>
+			</div>
+		</div>
+		
+		<div id="happeningsPage">
+			<div id="tab_header">
+				<div id="subheaderNoTabs"></div>
+			</div>
+			<div class="section_content">
+				<!-- Loading Message -->
+				<div class="messageContainer" id="loadingMessageContainer">
+					<span class="ajaxLoading">Loading...</span>
+				</div>
+				
+				<!-- Error Message -->
+				<div class="errorMessageContainer" id="errorContainer" style="display:none;">
+					<div class="errorMessage">&nbsp;</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="discussionsPage" style="display:none">
+			<div id="disc_tab_header">
+				<div id="disc_subheaderNoTabs"></div>
+			</div>
+			<div class="section_content">
+				<!-- Loading Message -->
+				<div class="messageContainer" id="loadingMessageContainerDiscussions">
+					<span class="ajaxLoading">Loading...</span>
+				</div>
+				
+				<!-- Error Message -->
+				<div class="errorMessageContainer" id="errorContainerDiscussions" style="display:none;">
+					<div class="errorMessage">&nbsp;</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="section_footer">
+			<div class="brandBottom"><span class="brandtextB">University</span></div>
+		</div>
+		
+		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>
+		
+	    <script type="text/javascript" src="scripts/ServiceDomains.js"></script>
+	    <script type="text/javascript" src="scripts/ThirdParty/jquery-1.4.2.min.js"></script>
+	    <script type="text/javascript" src="scripts/ThirdParty/json2.js"></script>
+	    <script type="text/javascript" src="scripts/wmm.js"></script>
+	    
+		<!-- Package:CombineScripts outputName="index_{hash}.js" outputDirectory="scripts" -->	
+		<script type="text/javascript" src="scripts/MobyAppInitializer.js"></script>	
+	    <script type="text/javascript" src="scripts/VariableValidator.js"></script>
+	    <script type="text/javascript" src="scripts/Utils.js"></script>
+	    <script type="text/javascript" src="scripts/EventDispatcher.js"></script>
+	    <script type="text/javascript" src="scripts/CrossDomainInitializer.js"></script>
+	    <script type="text/javascript" src="scripts/MobyDataManager.js"></script>
+	    <script type="text/javascript" src="scripts/Events/CustomEvent.js"></script>
+	    <script type="text/javascript" src="scripts/Events/DomainStatusEvent.js"></script>
+	    <script type="text/javascript" src="scripts/Events/MobyDataEvent.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/Course.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/AjaxRequestHeader.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/UserAnnouncement.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/CourseItem.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/UserTopic.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/UserThreadResponse.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/ThreadResponseAuthor.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/ContainerInfo.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/ResponseCounts.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/CrossFrameMessage.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/ItemGrade.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/DropboxSubmission.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/DiscussionItem.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/ViewInstance.js"></script>
+	    <script type="text/javascript" src="scripts/ValueObjects/HappeningItem.js"></script>
+	    <script type="text/javascript" src="scripts/ServiceManagers/AjaxManager.js"></script>
+	    <script type="text/javascript" src="scripts/ServiceManagers/SessionManager.js"></script>
+	    <script type="text/javascript" src="scripts/ServiceManagers/CourseListServiceManager.js"></script>
+	    <script type="text/javascript" src="scripts/ServiceManagers/AnnouncementsServiceManager.js"></script>
+	    <script type="text/javascript" src="scripts/ServiceManagers/CourseItemsServiceManager.js"></script>
+	    <script type="text/javascript" src="scripts/ServiceManagers/DiscussionsServiceManager.js"></script>
+	    <script type="text/javascript" src="scripts/ServiceManagers/GradesServiceManager.js"></script>
+	    <script type="text/javascript" src="scripts/ServiceManagers/DropboxServiceManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/MobyWorkflowManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/ClientStringManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Happenings/ViewStateManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Happenings/HappeningItemManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Happenings/DetailViewManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Happenings/ListViewManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Happenings/ErrorViewManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Discussions/ActiveTopicsViewManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Discussions/CourseTopicsViewManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Discussions/TopicDetailViewManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Discussions/ResponseDetailViewManager.js"></script>
+	    <script type="text/javascript" src="scripts/ViewManagers/Discussions/DiscussionItemManager.js"></script>
+ 		<!-- End Package:CombineScripts -->
+ 		
+    	<script type="text/javascript">
+	        _wmm.mark("services.retrieval");
+	    </script>
+
+	    <script type="text/javascript">
+    		
+		    var ANNOUNCEMENT_ITEM_CLASS_NAME = "announcement";
+		    var RECENT_RESPONSES_ITEM_CLASS_NAME = "recentthread";
+		    var SCHEDULED_ITEM_CLASS_NAME = "due";
+		    var DROPBOX_ITEM_CLASS_NAME = "dropbox";
+		    var UNREAD_RESPONSES_ITEM_CLASS_NAME = "unreadthread";
+		    var GRADE_ITEM_CLASS_NAME = "grade";
+		    var GENERIC_ITEM_CLASS_NAME = "catG";
+		    
+		    var PAGE_NAME_HAPPENINGS = "happeningsPage";
+		    var PAGE_NAME_DISCUSSIONS = "discussionsPage";
+    		
+		    var CUSTOM_EVENT_TYPE_LIST_CHANGE = "listChange";
+		    
+		    var domReady = false;
+		    var crossDomainReady = false;
+		    
+		    var mobyAppInitializer = MobyAppInitializer.getInstance();
+		    
+		    var crossDomainReadyHandler = function(p_event)
+		    {
+				crossDomainReady = true;
+				if (domReady)
+				{
+					mobyAppInitializer.startApplication();
+				}
+			};
+			
+			var crossDomainErrorHandler = function(p_event)
+		    {
+				mobyAppInitializer.showApplicationErrorMessage();
+			};
+		    
+		    var crossDomainInitializer = CrossDomainInitializer.getInstance();
+		    crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
+		    crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_READY, crossDomainReadyHandler, true);
+		    crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_ERROR, crossDomainErrorHandler, true);
+		    crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", serviceDomains[SERVICE_DOMAIN_PROXY]);
+		    
+			$(document).ready(function()
+		    {
+				domReady = true;
+				if (crossDomainReady)
+				{
+					mobyAppInitializer.startApplication();
+				}
+			});
+			
+	    </script>
+	    <script type="text/javascript">
+            _wmm.measure("Moby.Services.Download.NetworkTime", "services.retrieval");
+       	</script>
+
+	</body>
+</html>

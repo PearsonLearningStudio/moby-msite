@@ -1,0 +1,394 @@
+<div id="tab_header">
+	<div id="subheader" style="display:none;">
+		<div id="tabs">
+			<a id="byDateTab" class="selected" href="javascript:void(0);" title="Things to Know by Date">by Date</a>
+			<a id="byTypeTab" href="javascript:void(0);" title="Things to Know by Type">by Type</a>
+			<a id="byCourseTab" href="javascript:void(0);" title="Things to Know by Course">by Course</a>
+		</div>
+	</div>
+	<div id="subheaderNoTabs"></div>
+</div>
+
+<div class="section_content">
+	
+	<!-- Loading Message -->
+	<div class="messageContainer" id="loadingMessageContainer">
+		<span class="ajaxLoading">Loading...</span>
+	</div>
+	
+	<!-- No Courses Message -->
+	<div class="infoMessageContainer" id="infoContainer" style="display:none;">
+		<div class="infoMessage">There is no content available for you because you aren't enrolled in any active courses. <a href="javascript:void(0);" id="loginLink">Click here</a> to sign in as a different user.</div>
+	</div>
+	
+	<!-- Error Message -->
+	<div class="errorMessageContainer" id="errorContainer" style="display:none;">
+		<div class="errorMessage">&nbsp;</div>
+	</div>
+	
+	<!-- Back Button -->
+	<div class="contentNav" id="backButtonContainer" style="display:none">
+		<a id="backButton" class="newBackButton" href="javascript:void(0);">&nbsp;Back</a>
+	</div>
+	
+	<div id="contentContainer" style="display:none;">
+		<!-- TTK By Date -->	
+		<div id="byDateContainer">
+			<ul title="Select Type" id="byDateFilterContainer">
+				<li class="sectionSelect">
+					<form id="category-form" method="POST">
+						<select id="byDateFilter">
+							<option value="0" selected="true">All Types</option>
+							<option value="THSContainer">Things Happening Soon</option>
+							<option value="TTHContainer">Things That Happened</option>
+						</select>
+					</form>
+				</li>
+			</ul>
+			
+			<!-- Things Happening Soon -->
+			<div class="module_bgroup" id="THSContainer">
+				<ul class="itemListHeader" title="Things Happening Soon">
+					<li class="cathd">Things Happening Soon<span class="ajaxLoadingHeader">&nbsp;</span></li>
+					<li class="warn" id="happeningSoonByDateWarning" style="display:none"><span>Unable to get scheduled items at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="none" style="display:none"><span>There are no items to display.</span></li>
+				</ul>
+				<ul class="itemList">
+				</ul>
+				<ul class="itemListFooter">
+					<li class="more" style="display:none">
+						<a href="javascript:void(0);">Show 10 more...</a>
+					</li>
+				</ul>
+			</div>
+			
+			<!-- Things That Happened -->
+			<div class="module_bgroup" id="TTHContainer">
+				<ul class="itemListHeader" title="Things That Happened">
+					<li class="cathd">Things That Happened<span class="ajaxLoadingHeader">&nbsp;</span></li>
+					<li class="warn" id="announcementsByDateWarning" style="display:none"><span>Unable to get announcements at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="warn" id="gradesByDateWarning" style="display:none"><span>Unable to get grades at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="warn" id="dropboxByDateWarning" style="display:none"><span>Unable to get dropbox submissions at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="warn" id="responsesToMeByDateWarning" style="display:none"><span>Unable to get discussion responses to my responses at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="warn" id="recentResponsesByDateWarning" style="display:none"><span>Unable to get recent discussion activity at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="none" style="display:none"><span>There are no items to display.</span></li>
+				</ul>
+				<ul class="itemList">
+				</ul>
+				<ul class="itemListFooter">
+					<li class="more" style="display:none">
+						<a href="javascript:void(0);">Show 10 more...</a>
+					</li>
+				</ul>
+			</div>
+			
+		</div>
+		
+		
+		<!-- TTK By Type -->
+		<div id="byTypeContainer" style="display:none">
+			<ul title="Select Type" id="byTypeFilterContainer">
+				<li class="sectionSelect">
+					<form id="category-form" method="POST">
+						<select id="byTypeFilter">
+							<option value="0" selected="true">All Types</option>
+							<option value="announcementsContainer">Announcements</option>
+							<option value="happeningSoonContainer">Happening Soon</option>
+							<option value="gradesContainer">Grades</option>
+							<option value="discussionsContainer">Discussions</option>
+							<option value="dropboxSubmissionsContainer">Dropbox Submissions</option>
+						</select>
+					</form>
+				</li>
+			</ul>
+			
+			<!-- Announcements -->
+			<div class="module_bgroup" id="announcementsContainer">
+				<ul class="itemListHeader" title="Announcements">
+					<li class="cathd_announcements" id="announcementsHeader">Announcements<span class="ajaxLoadingHeader">&nbsp;</span></li>
+					<li class="warn" id="announcementsByTypeWarning" style="display:none"><span>Unable to get announcements at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="none" style="display:none"><span>There are no items to display.</span></li>
+				</ul>
+				<ul class="itemList">
+				</ul>
+				<ul class="itemListFooter">
+					<li class="more" style="display:none">
+						<a href="javascript:void(0);">Show 10 more...</a>
+					</li>
+				</ul>
+			</div>
+			
+			<!-- Happening Soon -->
+			<div class="module_bgroup" id="happeningSoonContainer">
+				<ul class="itemListHeader" title="Happening Soon">
+					<li class="cathd_due">Happening Soon<span class="ajaxLoadingHeader">&nbsp;</span></li>
+					<li class="warn" id="happeningSoonByTypeWarning" style="display:none"><span>Unable to get scheduled items at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="none" style="display:none"><span>There are no items to display.</span></li>
+				</ul>
+				<ul class="itemList">
+				</ul>
+				<ul class="itemListFooter">
+					<li class="more" style="display:none">
+						<a href="javascript:void(0);">Show 10 more...</a>
+					</li>
+				</ul>
+			</div>
+			
+			<!-- Grades -->
+			<div class="module_bgroup" id="gradesContainer">
+				<ul class="itemListHeader" title="Grades">
+					<li class="cathd_grades" id="gradesHeader">Grades<span class="ajaxLoadingHeader">&nbsp;</span></li>
+					<li class="warn" id="gradesByTypeWarning" style="display:none"><span>Unable to get grades at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="none" style="display:none"><span>There are no items to display.</span></li>
+				</ul>
+				<ul class="itemList">
+				</ul>
+				<ul class="itemListFooter">
+					<li class="more" style="display:none">
+						<a href="javascript:void(0);">Show 10 more...</a>
+					</li>
+				</ul>
+			</div>
+			
+			<!-- Discussion Activity -->
+			<div class="module_bgroup" id="discussionsContainer">
+				<ul class="itemListHeader" title="Discussions">
+					<li class="cathd_threads" id="discussionsHeader">Discussions<span class="ajaxLoadingHeader">&nbsp;</span></li>
+					<li class="warn" id="responsesToMeByTypeWarning" style="display:none"><span>Unable to get discussion responses to my responses at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="warn" id="recentResponsesByTypeWarning" style="display:none"><span>Unable to get recent discussion activity at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="none" style="display:none"><span>There are no items to display.</span></li>
+				</ul>
+				<ul class="itemList">
+				</ul>
+				<ul class="itemListFooter">
+					<li class="more" style="display:none">
+						<a href="javascript:void(0);">Show 10 more...</a>
+					</li>
+				</ul>
+			</div>
+			
+			<!-- Dropbox Submissions -->
+			<div class="module_bgroup" id="dropboxSubmissionsContainer">
+				<ul class="itemListHeader" title="Dropbox Submissions">
+					<li class="cathd_dropbox" id="dropboxHeader">Dropbox Submissions<span class="ajaxLoadingHeader">&nbsp;</span></li>
+					<li class="warn" id="dropboxByTypeWarning" style="display:none"><span>Unable to get dropbox submissions at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+					<li class="none" style="display:none"><span>There are no items to display.</span></li>
+				</ul>
+				<ul class="itemList">
+				</ul>
+				<ul class="itemListFooter">
+					<li class="more" style="display:none">
+						<a href="javascript:void(0);">Show 10 more...</a>
+					</li>
+				</ul>
+			</div>
+			
+		</div>
+		
+		<!-- TTK By Course -->
+		<div id="byCourseContainer" style="display:none">
+			<ul title="Select Course" id="byCourseFilterContainer">
+				<li class="sectionSelect">
+					<form id="category-form" method="POST">
+					<select id="byCourseFilter">
+						<option value="0" selected="true">All Courses</option>
+					</select>
+					</form>
+				</li>
+			</ul>
+		</div>
+	</div>
+	
+	<!-- BEGIN: Announcement Detail -->
+	<div id="announcementDetailContainer" style="display:none">
+		<div class="module_bgroup" id="announcementDetailTemplate">
+			<ul title="Announcement Subject">
+				<li class="cathd_announcements" id="announcementDetailSubject">Announcement Subject</li>
+				<li class="post">
+					<div>
+						<span class="bold" id="announcementDetailSubmitter">Submitter:</span><br/>
+						<span id="announcementDetailText">Text</span>
+						<br/><br/>
+						<span class="info"><span id="announcementDetailCourseName">Course Name</span> <span class="date" id="announcementDetailDate">Start Date</span></span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- END: Announcement Detail -->
+	
+	<!-- BEGIN: Grade Detail -->
+	<div id="gradeDetailContainer" style="display:none">
+	    <div class="module_bgroup" id="gradeDetailTemplate">
+	        <ul title="Grade: Gradable Item Title">
+	            <li class="cathd_grades" id="gradeDetailTypeName">Grade</li>
+	            <li class="post">
+	                <div>
+	                    <span class="bold" id="gradeDetailSubject">Gradable Item Title</span><br/>
+	                    <span id="gradeDetailNumericGrade">Numeric Grade:</span>
+	                    <span id="gradeDetailLetterGrade">Letter Grade:</span>
+	                    <span id="gradeDetailComments">Comments:</span>
+					    <br/><br/>
+						<span class="info"><span id="gradeDetailCourseName">Course Name</span> <span class="date" id="gradeDetailDate">Updated Date</span></span>
+                </div>
+	            </li>
+	        </ul>
+	    </div>
+	</div>
+	<!-- END: Grade Detail -->
+	
+	<!-- BEGIN: HappeningSoon Detail -->
+	<div id="happeningSoonDetailContainer" style="display:none">
+		<div class="module_bgroup" id="happeningSoonDetailTemplate">
+			<ul title="Happening Soon Subject">
+				<li class="cathd_due" id="happeningSoonDetailFormattedDate">Formatted Date</li>
+				<li class="post">
+					<div>
+						<span class="bold" id="happeningSoonDetailTitle">Title:</span><br/>
+						<span id="happeningSoonStartDateDetail">Start:<br/></span>
+						<span id="happeningSoonEndDateDetail">End:<br/></span>
+						<span id="happeningSoonDueDateDetail">Due:<br/></span>
+						<br/><br/>
+						<span class="info"><span id="happeningSoonDetailCourseName">Course Name</span> </span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- END: HappeningSoon Detail -->	
+
+	<!-- BEGIN: Recent Responses Detail -->
+	<div id="recentResponsesDetailContainer" style="display:none">
+        <div id="recentResponsesDetailTemplate" class="module_bgroup"> 
+            <ul title="Recent Discussion Responses"> 
+                <li class="cathd_threads">Recent Discussion Responses: <span id="recentResponsesDetailCount">0</span></li> 
+                <li class="post"> 
+	                <div> 
+		                <span id="recentResponsesDetailTitle" class="bold">Moby Dick - Discussion</span><br/> 
+		                <span id="recentResponsesDetailCountDescription">10 responses have been posted in the past 24 hours.</span><br/><br/> 
+		                <a id="recentResponsesDetailTopicLink" href="javascript:void(0);" class="bold">Go to Discussion</a> 
+		                <br/><br/> 
+		                <span class="info"><span id="recentResponsesDetailCourseTitle">American Literature</span><span class="date">Since yesterday at <span id="recentResponsesDetailTime">10:03 PM</span></span></span> 
+	                </div> 
+                </li> 
+            </ul> 
+        </div>
+	</div>
+	<!-- END: Recent Responses Detail -->
+	
+	<!-- BEGIN: Responses To Me Detail -->
+	<div id="responsesToMeDetailContainer" style="display:none">
+        <div id="responsesToMeDetailTemplate" class="module_bgroup"> 
+            <ul title="Unread Response to Your Post"> 
+                <li class="cathd_threads">Unread Response to Your Post</li> 
+                <li class="post"> 
+	                <div> 
+		                <span id="responsesToMeDetailTitle" class="bold">Moby Dick - Discussion</span><br/> 
+		                <span id="responsesToMeDetailAuthor">Author</span> responded to your post: <span id="responsesToMeDetailParentSubject">Subject</span><br/><br/> 
+		                <a id="responsesToMeDetailResponseLink" href="javascript:void(0);" class="bold">Go to Discussion</a> 
+		                <br/><br/> 
+		                <span class="info"><span id="responsesToMeDetailCourseTitle">American Literature</span><span id="responsesToMeDetailDate" class="date">Since yesterday at 10:03 PM</span></span> 
+	                </div> 
+                </li> 
+            </ul> 
+        </div>
+	</div>
+	<!-- END: Responses To Me Detail -->
+	
+	
+	<!-- BEGIN: Dropbox Submission Detail -->
+	<div id="dropboxSubmissionDetailContainer" style="display:none">
+        <div id="dropboxSubmissionDetailTemplate" class="module_bgroup"> 
+			<ul title="Dropbox Submission"> 
+                <li class="cathd_dropbox">Dropbox Submission: <span id="dropboxSubmissionDetailSubmitter">Submitter</span></li> 
+                <li class="post"> 
+	                <div> 
+		                <span id="dropboxSubmissionDetailBasketTitle" class="bold">Cell Biology - Unit Project</span><br/> 
+		                <span class="heading">Comments:</span><br/> 
+		                <span id="dropboxSubmissionDetailComments">Comments</span>
+		                <br/><br/> 
+		                <span class="info"><span id="dropboxSubmissionDetailCourseTitle">Biology</span><span id="dropboxSubmissionDetailSubmissionDate" class="date">Yesterday 10:03 PM</span></span> 
+	                </div> 
+                </li> 
+            </ul> 
+        </div>
+	</div>
+	<!-- END: Dropbox Submission Detail -->
+	
+	<!-- BEGIN: Course Container Template -->
+	<div id="courseContainerTemplate" style="display:none">
+		<div class="module_bgroup" id="courseContainer">
+			<ul class="itemListHeader" title="Course Name">
+				<li class="cathd" id="courseNameHeader"><span class="nameText">Course Name</span><span class="ajaxLoadingHeader">&nbsp;</span></li>
+				<li class="warn" id="happeningSoonByCourseWarning" style="display:none"><span>Unable to get scheduled items at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+				<li class="warn" id="announcementsByCourseWarning" style="display:none"><span>Unable to get announcements at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+				<li class="warn" id="gradesByCourseWarning" style="display:none"><span>Unable to get grades at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+				<li class="warn" id="dropboxByCourseWarning" style="display:none"><span>Unable to get dropbox submissions at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+				<li class="warn" id="responsesToMeByCourseWarning" style="display:none"><span>Unable to get discussion responses to my responses at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+				<li class="warn" id="recentResponsesByCourseWarning" style="display:none"><span>Unable to get recent discussion activity at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+				<li class="none" style="display:none"><span>There are no items to display.</span></li>
+			</ul>
+			<ul class="itemList">
+			</ul>
+			<ul class="itemListFooter">
+				<li class="more" style="display:none">
+					<a href="javascript:void(0);">Show 10 more...</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- END: Course Container Template -->
+	
+	<!-- BEGIN: No Items Template -->
+	<ul id="loadingItemsTemplate" style="display:none">
+		<li class="none" id="noItemsTemplate">There are no items to display.</li>
+	</ul>
+	<!-- END: No Items Template -->
+	
+	<!-- BEGIN: List Item Template -->
+	<ul id="itemTemplate" style="display:none">
+		<li>
+			<a href="javascript:void(0);">
+			<span class="subject">Subject</span>
+			<span class="replytext">Text</span>
+			<span class="name">
+				<span class="courseName">Course Name</span> <span class="date">Date</span>
+			</span>
+			</a>
+		</li>
+	</ul>
+	<!-- END: List Item Template -->
+	
+	<!-- BEGIN: Inline Error Template -->
+    <div class="inlineError" style="display:none"> 
+		Error<br/>
+	</div>
+	<!-- END: Inline Error -->
+	
+	<!-- BEGIN: Inline Message Template -->
+	<div class="inlineMessage" id="" style="display:none">
+	    Message<br/>    
+	</div>
+	<!-- END: Inline Message -->
+	
+	<!-- BEGIN: List Item Error Message Template -->
+	<ul id="itemErrorTemplate" style="display:none">
+		<li class="itemError" id="">
+			<div class="errorMessage">&nbsp;</div>
+		</li>
+	</ul>
+	<!-- END: List Item Error Message Template -->
+	
+	<!-- BEGIN: List Item Warning Message Template -->
+	<ul id="itemWarningTemplate" style="display:none">
+		<li class="itemWarn" id="">
+			<div class="errorMessage">&nbsp;</div>
+		</li>
+	</ul>
+	<!-- END: List Item Warning Message Template -->
+	
+	<div class="belowContentNav">
+		<a id="logoutBtn" class="Button" href="javascript:void(0);" style="display:none;">Sign Out</a>
+	</div>
+	
+</div>

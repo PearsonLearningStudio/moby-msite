@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+	<head>
+		<title xmlns="http://www.w3.org/1999/xhtml">Mobile Access</title>
+		<meta xmlns="http://www.w3.org/1999/xhtml" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+		<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" media="screen">
+				  @import "styles/default/style.css";
+		</style>
+		<link rel="apple-touch-icon" href="" />
+		<link rel="shortcut icon" href="" />
+	</head>
+	<body id="registerPage">
+		
+		<div id="registerPageHeader" class="section_header">
+			<div class="brandTop"><span class="brandtextT">University</span></div>
+		</div>
+		<div id="register_tab_header">
+			<div id="register_subheaderNoTabs"></div>
+		</div>
+		<div id="registerFormSection" class="section_content">
+			<!-- Loading Message -->
+			<div class="messageContainer" id="loadingMessageContainer">
+				<span class="ajaxLoading">Loading...</span>
+			</div>
+			
+			<div class="errorMessageContainer" id="errorContainer" style="display:none;">
+				<div class="errorMessage">&nbsp;</div>
+			</div>
+			
+			<div class="authSuccess" id="successContainer" style="display:none;">
+				<span class="authHeader">Your Mobile Access Link is on the way!</span> 
+				<span class="authText">We have sent an email to the following email address: <span id="emailSentTo" class="bold">&nbsp;</span> 
+				<ul class="steps"> 
+					<li>Make sure you are checking the correct email account.</li> 
+					<li>If you don't receive the email within 10 minutes, check your junk mail filter.</li> 
+					<li>Access links expire after 1 hour. If your link has expired, you can <a id="registerLink" href="javascript:void(0);">have another one sent</a>.</li> 
+					<li>If you continue to have problems, contact the helpdesk. </li>
+				</ul>
+			</div>
+			
+			<div id="registerFormContainer" class="authForm" style="display:none;">
+				<form method="GET" name="" id="" action="submit">
+				<span class="authHeader">Get a Mobile Access Link!</span><br />
+				<span class="authText">Enter some information so we can register you:</span>
+				<div class="authFields">
+					<span class="formlabel">Last Name: </span><br/>
+					<input type="text" name="lastName" id="lastName" size="20" /><br/>
+					<span class="formlabel">Email Address: </span><br/>
+					<input type="email" name="systemEmail" id="systemEmail" size="20" autocapitalize="off"/><br/>
+				</div>
+				<br/>
+				<a class="authButtons" id="registerButton" href="javascript:void(0);">Email My Access Link</a>
+				<span id="loadingImage" style="display:none;" class="ajaxLoading">&nbsp;</span>
+				</form>
+			</div>
+		</div>
+		
+		<div id="registerTroubleInfo" class="section_content" style="display:none;">
+			<div>
+				<a class="authTroubleLink" id="troubleLink" href="javascript:void(0);">&raquo; Having trouble getting access?</a>
+			</div>
+			<div id="registerTroubleContainer" class="authForm" style="display:none;">
+				Having trouble getting access?
+				<ul class="steps">
+					<li>Make sure you are checking the correct email account.</li>
+					<li>The link in the email must be clicked from within your mobile device.</li>
+					<li>If you don't receive the email within 10 minutes of requesting, check your junk mail filter.</li>
+					<li>Access links expire after 1 hour. If your link has expired, you can have another one sent.</li>
+					<li>If you continue to have problems, contact the helpdesk.</li>
+				</ul>
+			</div>
+		</div>
+		<div id="registerPageFooter" class="section_footer">
+			<div class="brandBottom"><span class="brandtextB">University</span></div>
+		</div>
+		
+		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>
+	 
+		<script type="text/javascript" src="scripts/ServiceDomains.js"></script>
+		<script type="text/javascript" src="scripts/ThirdParty/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="scripts/ThirdParty/json2.js"></script>
+		
+		<!-- Package:CombineScripts outputName="register_{hash}.js" outputDirectory="scripts" -->		
+        <script type="text/javascript" src="scripts/VariableValidator.js"></script>
+        <script type="text/javascript" src="scripts/Utils.js"></script>
+        <script type="text/javascript" src="scripts/CrossDomainInitializer.js"></script>
+        <script type="text/javascript" src="scripts/EventDispatcher.js"></script>
+	    <script type="text/javascript" src="scripts/Events/CustomEvent.js"></script>
+	    <script type="text/javascript" src="scripts/Events/DomainStatusEvent.js"></script>
+        <script type="text/javascript" src="scripts/ValueObjects/AjaxRequestHeader.js"></script>
+        <script type="text/javascript" src="scripts/ValueObjects/CrossFrameMessage.js"></script>
+        <script type="text/javascript" src="scripts/ServiceManagers/AjaxManager.js"></script>
+        <script type="text/javascript" src="scripts/ServiceManagers/SessionManager.js"></script>
+        <script type="text/javascript" src="scripts/ViewManagers/ClientStringManager.js"></script>
+ 		<!-- End Package:CombineScripts -->
+
+		<script type="text/javascript">
+		
+			var crossDomainInitializer;
+			var sessionManager;
+			var clientStringManager;
+			var cs;
+			
+			$(document).ready(function()
+			{
+				crossDomainInitializer = CrossDomainInitializer.getInstance();
+			
+				sessionManager = SessionManager.getInstance();
+				sessionManager.serviceLocation = serviceDomains[SERVICE_DOMAIN_PROXY];
+				
+				clientStringManager = ClientStringManager.getInstance();
+				cs = getQueryStringValue("cs");
+			
+				applyBrandingToPage($("head"), cs);
+				if (cs == null || cs == undefined || cs == "")
+				{
+					// no client string detected, show some error
+					$("#loadingMessageContainer").hide();
+					$("#errorContainer div.errorMessage").html("The page cannot be found!");
+					$("#errorContainer").show();
+				}
+				else
+				{
+					clientStringManager.setClientString(cs);
+					crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
+					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_READY, crossDomainReadyHandler, true);
+					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_ERROR, crossDomainErrorHandler, true);
+					crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", serviceDomains[SERVICE_DOMAIN_PROXY]);
+					
+					$("#troubleLink").bind("click", troubleLinkClickHandler);
+					$("#registerLink").bind("click", registerLinkClickHandler);
+					// assign actions to the sign in button
+					$("#registerButton").bind("click", registerClickHandler);
+					// listen for form submit events, and forward them to the sign in click handler
+					$("#registerFormContainer").bind("submit", function(p_event)
+					{
+						p_event.preventDefault();
+						registerClickHandler();
+					});
+				}
+			});
+			
+			/**
+				When the page is fully initialized, present the login form.
+			*/
+			var crossDomainReadyHandler = function()
+			{
+				$("#loadingMessageContainer").hide();
+				$("#registerFormContainer").add("#registerTroubleInfo").show();
+			};
+			
+			/**
+				If the cross domain file never loaded, show an error message.
+			*/
+			var crossDomainErrorHandler = function()
+			{
+				$("#loadingMessageContainer").hide();
+				$("#errorContainer .errorMessage").html("Application content is not available at this time. Please try again later and if the problem persists, contact the helpdesk.");
+				$("#errorContainer").show();
+			};
+			
+			
+			var troubleLinkClickHandler = function()
+			{
+				$("#registerTroubleContainer").show();
+				$("#troubleLink").hide();
+			};
+			
+			var registerLinkClickHandler = function()
+			{
+				$("#registerFormContainer").show();
+				$("#successContainer").hide();
+				$("#registerTroubleInfo").show();
+			};
+			
+			/**
+				When the user clicks the register button, attempt to register them
+			*/
+			var registerClickHandler = function()
+			{
+				if ($("#lastName").val == "" || $("#systemEmail").val() == "")
+				{
+					$("#errorContainer div.errorMessage").html("Last Name and Email Address are required.");
+					$("#errorContainer").show();
+					return;
+				}
+				$("#errorContainer").hide();
+				$("#loadingImage").show();
+				$("#registerButton").hide();
+				sessionManager.register(clientStringManager.getClientString(), $("#lastName").val(), $("#systemEmail").val(), registerHandler);
+			};
+			
+			/**
+				Handler for a response to athorize a user. If a user was authorized successfully, 
+				redirect them to the main page. Otherwise show them an error.
+				@param		{Boolean}	p_success	true if the user was authorized successfully, false otherwise
+				@param		{String}	p_errorCode		the HTTP error code on the response
+			*/
+			var registerHandler = function(p_success, p_errorCode)
+			{
+				$("#registerButton").show();
+				$("#loadingImage").hide();
+				if (p_success)
+				{
+					eraseCookie("currentPage");
+					$("#registerTroubleInfo").hide();
+					$("#registerFormContainer").hide();
+					$("#emailSentTo").html($("#systemEmail").val());
+					$("#successContainer").show();
+					return;
+				}
+				//not logged in, what went wrong?
+				switch(p_errorCode)
+				{
+					case 400:
+						// if the response was a "bad request", show message that login credentials were incorrect.
+						$("#errorContainer div.errorMessage").html("We were unable to verify you. Is your information correct or do you have another email address? If you continue to have problems, please contact the helpdesk.");
+						break;
+					case 500:
+						// if the response was a 500 "internal server error", show a message of the likely cause.
+						$("#errorContainer div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check Last Name and Email Address and try again.");
+						break;
+					default:
+						// otherwise show a general message that the communication was unsuccessful.
+						$("#errorContainer div.errorMessage").html("Unable to contact the server. Please try again in a few minutes.");
+				}			
+				$("#errorContainer").show();
+				
+			};
+		</script>
+	 
+	 
+	</body>
+</html>

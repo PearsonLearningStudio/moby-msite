@@ -1,0 +1,12 @@
+*.swp
+*.suo
+*.config
+*.cs
+*./src/msite/Controllers
+*./src/msite/Views
+*./src/msite/Properties
+*csproj*
+*.pam
+*.env
+*ashford*
+

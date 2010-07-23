@@ -1,0 +1,216 @@
+<div id="disc_tab_header">
+	<div id="disc_subheaderNoTabs"></div>
+</div>
+
+<div class="section_content">
+	
+	<!-- Loading Message -->
+	<div class="messageContainer" id="discussionsLoadingMessageContainer">
+		<span class="ajaxLoading">Loading...</span>
+	</div>
+	
+	<!-- No Courses Message -->
+	<div class="infoMessageContainer" id="discussionsInfoContainer" style="display:none;">
+		<div class="infoMessage">There is no content available for you because you aren't enrolled in any active courses. <a href="javascript:void(0);" id="discussionsLoginLink">Click here</a> to sign in as a different user.</div>
+	</div>
+	
+	<!-- Error Message -->
+	<div class="errorMessageContainer" id="discussionsErrorContainer" style="display:none;">
+		<div class="errorMessage">&nbsp;</div>
+	</div>
+	
+	<!-- Back Button -->
+	<div class="contentNav" id="discussionsBackButtonContainer" style="display:none">
+		<a id="discussionsBackButton" class="newBackButton" href="javascript:void(0);">&nbsp;Back</a>
+	</div>
+	
+	<div id="discussionsContentContainer" style="display:none;">
+	
+		<ul id="discussionsCourseDropdownContainer" title="Select Course">
+			<li class="sectionSelect">
+				<form id="category-form" method="POST">
+				<select id="discussionsByCourseFilter">
+					<option value="0" selected="true">All Courses</option>
+				</select>
+				</form>
+			</li>
+		</ul>
+		
+		<!-- Course Topics -->
+		<div id="courseTopics" style="display:none">
+		</div>
+		
+		
+		<!-- Topic Detail -->
+		<div class="module_bgroup" id="responsesByTopic" style="display:none">
+			<ul title="Topic Title">
+				<li class="cathd_discussion">Topic Title</li>
+				<li class="post">
+					<div>
+						<span id="topicDescription">Description</span>
+						<div id="RespondLink"><a href="javascript:void(0);" class="respond">Respond</a></div>
+						<div id="RespondForm" style="display:none" class="respondform">
+							<form method="GET" name="" id="" action="">
+								<div class="inlineError" style="display:none">
+									Error Message
+								</div>
+								Subject:
+								<input class="inputtext" type="text" name="threadSubject" id="threadSubject" size="22" /><br/>
+								<textarea id="threadResponseArea" cols="28" rows="5"></textarea>
+								<br/>
+								<a id="respondBtn" class="blueButtonSM" href="javascript:void(0);">Respond</a>
+								<a id="cancelBtn" class="blueButtonSM" href="javascript:void(0);">Cancel</a>
+								<span class="ajaxLoadingThread" style="display:none;">&nbsp;</span>
+							</form>
+						</div>
+						<div id="RespondConfirm" style="display:none" class="respondconfirm">
+							<a href="javascript:void(0);">Your response has been posted.</a>
+						</div>
+
+						<span class="replies">Responses</span>
+					</div>
+				</li>
+				<li id="topicDetailWarningMessage" class="warn" style="display:none"><span class="responseWarn">Unable to get responses for this topic at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li> 
+				<li id="topicDetailLoadingResponses" class="loadingResponses">Loading responses...<span class="ajaxLoadingHeader">&nbsp;</span></li> 
+			</ul>
+		</div>
+		
+		<!-- Response Detail -->
+		<div class="module_bgroup" id="responsesByResponse" style="display:none"> 
+			<ul title="Response Title"> 
+				<li class="cathd_discussionR">Response Title</li> 
+				<li class="post"> 
+					<div> 
+						<span class="name"><span id="responseAuthorName">Response Author</span><span id="responsePostedDate" class="date">Posted Date</span></span> 
+						<span id="responseDescription">Description</span>
+						<div id="respondToResponseLink" style="display:"><a href="javascript:void(0);" class="respond">Respond</a></div> 
+						<div id="respondToResponseForm" style="display:none" class="respondform"> 
+							<form method="GET" name="" id="" action="">
+							<div class="inlineError" style="display:none">
+								Error Message
+							</div>
+							Subject:
+							<input id="respondToResponseSubject" class="inputtext" type="text" name="threadSubject" size="22" /><br/> 
+							<textarea id="respondToResponseArea" cols="28" rows="5"></textarea> 
+							<p/> 
+							<a id="respondToResponseRespondBtn" class="blueButtonSM" href="javascript:void(0);">Respond</a> 
+							<a id="respondToResponseCancelBtn" class="blueButtonSM" href="javascript:void(0);">Cancel</a>
+							<span class="ajaxLoadingThread" style="display:none;">&nbsp;</span>
+							</form> 
+						</div> 
+						<div id="respondToResponseConfirm" style="display:none" class="respondconfirm"> 
+							<a href="javascript:void(0);"">Your response has been posted.</a> 
+						</div> 
+						
+						<span class="replies">Responses</span>
+					</div>
+				</li>
+				<li id="responseDetailWarningMessage" class="warn" style="display:none"><span class="responseWarn">Unable to get responses for this response at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li> 
+				<li id="responseDetailLoadingResponses" class="loadingResponses">Loading responses...<span class="ajaxLoadingHeader">&nbsp;</span></li> 
+			</ul> 
+		</div>
+		
+		<div class="belowContentNav">
+			<a id="logoutBtnDiscussions" class="Button" style="display:none;" href="javascript:void(0);">Sign Out</a>
+		</div>
+	</div>
+
+</div>
+
+<!-- BEGIN: Topic Course Template -->
+<div id="topicCourseTemplate" style="display:none">
+	<div class="module_bgroup"> 
+		<ul title="CourseTitle" class="courseTopicListHeader"> 
+			<li class="cathd"><span class="courseTitleHeader">Course Title</span><span class="ajaxLoadingHeader">&nbsp;</span></li>
+			<li class="warn" style="display:none"><span class="topicwarn">Unable to get discussion topics for this course at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+			<li class="warn" style="display:none"><span class="closedthreadwarn">Unable to get closed discussions for this course at this time. Please try again later and if the problem persists, contact the helpdesk.</span></li>
+		</ul>
+		<ul class="courseTopicList">
+		</ul>
+		<ul class="courseTopicListFooter">
+			<li class="more" style="display:none"> 
+				<a href="javascript:scroll(0,0);">all <span class="moreCourseTitle">Course Title</span>...</a> 
+			</li> 
+		</ul> 
+	</div> 
+</div>
+<!-- END: Topic Course Template -->
+
+<!-- BEGIN: No Discussions Template -->
+<ul id="noDiscussionsTemplate" style="display:none">
+	<li class="none"><span>There are no discussion topics for this course.</span></li>
+</ul>
+<!-- END: No Discussions Template -->
+
+<!-- BEGIN: No Active Topics Template -->
+<ul id="noActiveTopicsTemplate" style="display:none">
+	<li class="none"><span class="noActiveTopics">There are no discussion topics for this course with unread responses or activity in the past 24 hours.</span></li>
+</ul>
+<!-- END: No Active Topics Template -->
+
+<!-- BEGIN: Unit Header Template -->
+<ul id="unitHeaderTemplate" style="display:none">
+	<li class="unitHeading">Unit Header</li>
+</ul>
+<!-- END: Unit Header Template -->
+
+<!-- BEGIN: Topic Item Template -->
+<ul id="topicItemTemplate" style="display:none">
+	<li class="topic"> 
+		<a href="javascript:void(0);"> 
+		<span class="subject">Subject</span> 
+		</a> 
+	</li> 
+</ul>
+<!-- END: Topic Item Template -->
+
+<!-- BEGIN: Closed Thread Template -->
+<ul id="closedThreadTemplate" style="display:none">
+	<li class="closedtopic" style="display:none"> 
+		<span> 
+		<span class="subject">ThreadTitle</span> 
+		<span class="replies">(Closed until May 19)</span> 
+		</span> 
+	</li> 
+</ul>
+<!-- END: Closed Thread Template -->
+
+<!-- BEGIN: Topic Response Counts Template -->
+<div id="topicResponseCountsTemplate" style="display:none">
+	<span class="name"><span class="last24HourResponseCount">0 responses</span> in past 24 hours<br/>You've posted <span class="personalResponseCount">0 responses</span></span> 
+	<span class="replies"><span class="totalResponseCount">0 Responses</span> (<span class="unreadResponseCount">0</span> Unread)</span> 
+</div>
+<!-- END: Topic Response Counts Template -->
+
+<!-- BEGIN: Topic No Response Counts Template -->
+<div id="topicNoResponseCountsTemplate" style="display:none">
+	<span class="replies">0 Responses</span> 
+</div>
+<!-- END: Topic Response Counts Template -->
+
+<!-- BEGIN: Response Item Template -->
+<ul id="responseItemTemplate" style="display:none">
+	<li class="replyread">
+		<a href="javascript:void(0);">
+			<span class="subject">Subject</span>
+			<span class="replytext">Text</span>
+			<span class="name">
+				<span class="nameText">Name</span> <span class="date">Date</span>
+			</span>
+			<span class="replies">Responses</span>
+		</a>
+	</li>
+</ul>
+<!-- END: Response Item Template -->
+		
+<!-- BEGIN: Inline Error Template -->
+<div class="inlineError" style="display:none"> 
+	Error<br/>
+</div>
+<!-- END: Inline Error -->
+
+<!-- BEGIN: Inline Message Template -->
+<div class="inlineMessage" id="Div1" style="display:none">
+    Message<br/>    
+</div>
+<!-- END: Inline Message -->
