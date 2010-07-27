@@ -2,10 +2,13 @@ Moby mSite
 ================
 
 The Moby mSite is a Pearson LearningStudio initiative aimed at providing a Mobile Solution
-for our partners.  While the mSite is a woring mobile experience, we are giving you access
+for our partners.  While the mSite is a working mobile experience, we are giving you access
 to the source code so that you can customize your user experience to best suit your
-student faculty needs.
+student/faculty needs.
 
+Online Javadoc is available at: [msite-js][msite-js]
+
+[msite-js]: http://integration.ecollege.com/developers/msite-js/index.html 
 
 Status
 ------
