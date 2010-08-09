@@ -5,6 +5,7 @@
 *./src/msite/Controllers
 *./src/msite/Views
 *./src/msite/Properties
+src/msite/styles/epcustom
 *csproj*
 *.pam
 *.env
