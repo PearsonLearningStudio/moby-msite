@@ -1,4 +1,21 @@
-﻿/**
+﻿/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/**
 	@class
 	@author		MacA
 	
@@ -221,12 +238,75 @@ var ViewStateManager = (function()
 /************************************
 	Static Properties
 ************************************/
+
+/**
+	Defines the View State of "type".
+	@static
+	@type	String
+	@default	"type"
+*/
 ViewStateManager.VIEW_STATE_BY_TYPE = "type";
+
+/**
+	Defines the View State of "date".
+	@static
+	@type	String
+	@default	"date"
+*/
 ViewStateManager.VIEW_STATE_BY_DATE = "date";
+
+/**
+	Defines the View State of "course".
+	@static
+	@type	String
+	@default	"course"
+*/
 ViewStateManager.VIEW_STATE_BY_COURSE = "course";
+
+/**
+	Defines the View State of "announcementDetail".
+	@static
+	@type	String
+	@default	"announcementDetail"
+*/
 ViewStateManager.VIEW_STATE_ANNOUNCEMENT_DETAIL = "announcementDetail";
+
+/**
+	Defines the View State of "schedulerDetail".
+	@static
+	@type	String
+	@default	"schedulerDetail"
+*/
 ViewStateManager.VIEW_STATE_SCHEDULER_DETAIL = "schedulerDetail";
+
+/**
+	Defines the View State of "dropboxDetail".
+	@static
+	@type	String
+	@default	"dropboxDetail"
+*/
 ViewStateManager.VIEW_STATE_DROPBOX_DETAIL = "dropboxDetail";
+
+/**
+	Defines the View State of "gradeDetail".
+	@static
+	@type	String
+	@default	"gradeDetail"
+*/
 ViewStateManager.VIEW_STATE_GRADE_DETAIL = "gradeDetail";
+
+/**
+	Defines the View State of "recentResponseDetail".
+	@static
+	@type	String
+	@default	"recentResponseDetail"
+*/
 ViewStateManager.VIEW_STATE_RECENT_RESPONSE_DETAIL = "recentResponseDetail";
+
+/**
+	Defines the View State of "responseToMyResponseDetail".
+	@static
+	@type	String
+	@default	"responseToMyResponseDetail"
+*/
 ViewStateManager.VIEW_STATE_RESPONSE_TO_MY_RESPONSE_DETAIL = "responseToMyResponseDetail";

@@ -8,6 +8,23 @@
 		</style>
 		<link rel="apple-touch-icon" href="" />
 		<link rel="shortcut icon" href="" />
+		<script type="text/javascript" src="scripts/ConfigSettings.js"></script>
+		<!-- Package:CombineScripts outputName="register_preload_{hash}.js" outputDirectory="scripts" -->
+		<script type="text/javascript" src="scripts/ViewManagers/ClientStringManager.js"></script>
+		<script type="text/javascript" src="scripts/preloadUtils.js"></script>
+		<!-- End Package:CombineScripts -->
+		<script type="text/javascript">
+			// logic to set custom stylesheet needs to be at the top of the
+			// page to prevent the default style from showing at all
+			var csm = ClientStringManager.getInstance();
+			var cs = getQueryStringValue("cs");
+			//if not on the qs, then get it from configsettings
+			if (cs == null || cs == undefined || cs == "") {
+			    cs = configSettings.clientstring;
+			}				
+			csm.setClientString(cs);
+			applyBrandingToPage(cs);
+		</script>
 	</head>
 	<body id="registerPage">
 		
@@ -76,7 +93,7 @@
 		
 		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>
 	 
-		<script type="text/javascript" src="scripts/ServiceDomains.js"></script>
+	
 		<script type="text/javascript" src="scripts/ThirdParty/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="scripts/ThirdParty/json2.js"></script>
 		
@@ -106,12 +123,15 @@
 				crossDomainInitializer = CrossDomainInitializer.getInstance();
 			
 				sessionManager = SessionManager.getInstance();
-				sessionManager.serviceLocation = serviceDomains[SERVICE_DOMAIN_PROXY];
+				sessionManager.serviceLocation = configSettings[SERVICE_DOMAIN_PROXY];
 				
 				clientStringManager = ClientStringManager.getInstance();
 				cs = getQueryStringValue("cs");
-			
-				applyBrandingToPage($("head"), cs);
+
+				if (cs == null || cs == undefined || cs == "") {
+				    cs = configSettings.clientstring;
+				}
+				
 				if (cs == null || cs == undefined || cs == "")
 				{
 					// no client string detected, show some error
@@ -121,11 +141,10 @@
 				}
 				else
 				{
-					clientStringManager.setClientString(cs);
 					crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
 					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_READY, crossDomainReadyHandler, true);
 					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_ERROR, crossDomainErrorHandler, true);
-					crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", serviceDomains[SERVICE_DOMAIN_PROXY]);
+					crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", configSettings[SERVICE_DOMAIN_PROXY]);
 					
 					$("#troubleLink").bind("click", troubleLinkClickHandler);
 					$("#registerLink").bind("click", registerLinkClickHandler);
@@ -212,11 +231,11 @@
 				//not logged in, what went wrong?
 				switch(p_errorCode)
 				{
-					case 400:
+					case "400":
 						// if the response was a "bad request", show message that login credentials were incorrect.
 						$("#errorContainer div.errorMessage").html("We were unable to verify you. Is your information correct or do you have another email address? If you continue to have problems, please contact the helpdesk.");
 						break;
-					case 500:
+					case "500":
 						// if the response was a 500 "internal server error", show a message of the likely cause.
 						$("#errorContainer div.errorMessage").html("An unexpected error occurred while attempting to validate your credentials. Please check Last Name and Email Address and try again.");
 						break;

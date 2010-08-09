@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		MacA
@@ -94,8 +111,8 @@ var SessionManager = (function()
 		*/
 		var _rememberMe = true;
 		
-		// this will go away eventually.
-		var _me = "";
+		var _mobyClientId = "30bb1d4f-2677-45d1-be13-339174404402";
+		
 		
 		/************************************
 			Public Properties
@@ -221,8 +238,6 @@ var SessionManager = (function()
 			// set the token
             _initAccessTokenAuthHeader("Access_Token access_token=" + p_accessToken.access_token);
             
-            // temporary!!!!!!!!
-			_me = p_accessToken.access_token.split("|")[2];
 
         };
         		
@@ -336,10 +351,6 @@ var SessionManager = (function()
 			Public Methods
 		************************************/
 		
-		this.getMyId = function()
-		{
-			return _me;
-		};
 		
 		/**
 			Retrieves the access token used to access other ecollege services. If the token isn't expired yet, 
@@ -396,7 +407,7 @@ var SessionManager = (function()
 			VariableValidator.require(this, p_callback, "function");
 			_rememberMe = p_rememberUser;
 			_logInCallback = p_callback;
-			var postData = "clientString=" + p_clientString + "&userLogin=" + p_userName + "&password=" + p_password;
+			var postData = "clientString=" + p_clientString + "&userLogin=" + p_userName + "&password=" + p_password + "&client_id=" + _mobyClientId;
 			_ajaxManager.post(this.serviceLocation + "/authorize/grant", postData, [], _logInSuccessHandler, _logInErrorHandler);
 		};
 		
@@ -429,7 +440,7 @@ var SessionManager = (function()
 			VariableValidator.require(this, p_email, "string");
 			VariableValidator.require(this, p_callback, "function");
 			_registerCallback = p_callback;
-			var postData = "clientString=" + p_clientString + "&email=" + escape(p_email) + "&lastname=" + p_lastName;
+			var postData = "clientString=" + p_clientString + "&email=" + escape(p_email) + "&lastname=" + p_lastName + "&client_id=" + _mobyClientId;
 			_ajaxManager.post(this.serviceLocation + "/authorize/grant/email", postData, [], _registerSuccessHandler, _registerErrorHandler);
 		};
 		

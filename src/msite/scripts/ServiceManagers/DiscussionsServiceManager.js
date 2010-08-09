@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		MacA
@@ -464,9 +481,10 @@ var DiscussionsServiceManager = (function()
 		var _createUserTopic = function(p_userTopicData)
 		{
 			var userTopic = new UserTopic();
-			userTopic.id = p_userTopicData.topic.id.toString();
-			userTopic.title = p_userTopicData.topic.title.stripHtmlTags();
-			userTopic.description = p_userTopicData.topic.description.stripHtmlTags();
+			userTopic.id = p_userTopicData.id.toString();
+			userTopic.topicId = p_userTopicData.topic.id.toString();
+			userTopic.title = p_userTopicData.topic.title.stripHtmlTags(true);
+			userTopic.description = p_userTopicData.topic.description.stripHtmlTags(true);
 			userTopic.orderNumber = p_userTopicData.topic.orderNumber;
 			userTopic.containerInfo = _createContainerInfo(p_userTopicData.topic.containerInfo);
 			userTopic.responseCounts = _createResponseCounts(p_userTopicData.childResponseCounts);
@@ -483,13 +501,13 @@ var DiscussionsServiceManager = (function()
 		{
 			var containerInfo = new ContainerInfo();
 			containerInfo.contentItemId = p_containerInfo.contentItemID.toString();
-			containerInfo.contentItemTitle = p_containerInfo.contentItemTitle.stripHtmlTags();
+			containerInfo.contentItemTitle = p_containerInfo.contentItemTitle.stripHtmlTags(true);
 			containerInfo.contentItemOrderNumber = p_containerInfo.contentItemOrderNumber;
-			containerInfo.unitTitle = p_containerInfo.unitTitle.stripHtmlTags();
+			containerInfo.unitTitle = p_containerInfo.unitTitle.stripHtmlTags(true);
 			containerInfo.unitNumber = p_containerInfo.unitNumber;
 			containerInfo.unitHeader = p_containerInfo.unitHeader;
 			containerInfo.courseId = p_containerInfo.courseID.toString();
-			containerInfo.courseTitle = p_containerInfo.courseTitle.stripHtmlTags();
+			containerInfo.courseTitle = p_containerInfo.courseTitle.stripHtmlTags(true);
 			return containerInfo;
 		};
 
@@ -522,8 +540,8 @@ var DiscussionsServiceManager = (function()
 			userThreadResponse.id = userThreadResponse.author.id + "-" + p_threadResponseData.id;
 			userThreadResponse.markedAsRead = true;
 			userThreadResponse.threadResponseId = p_threadResponseData.id.toString();
-			userThreadResponse.title = p_threadResponseData.title.stripHtmlTags();
-			userThreadResponse.description = p_threadResponseData.description.stripHtmlTags();
+			userThreadResponse.title = p_threadResponseData.title.stripHtmlTags(true);
+			userThreadResponse.description = p_threadResponseData.description.stripHtmlTags(true);
 			userThreadResponse.postedDateISO8601 = p_threadResponseData.postedDate;
 			userThreadResponse.postedDate = p_threadResponseData.postedDate.toDate().getTime();
 			userThreadResponse.postedDateFormatted = p_threadResponseData.postedDate.toDate().getFormattedDateTime();
@@ -544,8 +562,8 @@ var DiscussionsServiceManager = (function()
 			userThreadResponse.id = p_userThreadResponseData.id;
 			userThreadResponse.markedAsRead = p_userThreadResponseData.markedAsRead;
 			userThreadResponse.threadResponseId = p_userThreadResponseData.response.id.toString();
-			userThreadResponse.title = p_userThreadResponseData.response.title.stripHtmlTags();
-			userThreadResponse.description = p_userThreadResponseData.response.description.stripHtmlTags();
+			userThreadResponse.title = p_userThreadResponseData.response.title.stripHtmlTags(true);
+			userThreadResponse.description = p_userThreadResponseData.response.description.stripHtmlTags(true);
 			userThreadResponse.postedDateISO8601 = p_userThreadResponseData.response.postedDate;
 			userThreadResponse.postedDate = p_userThreadResponseData.response.postedDate.toDate().getTime();
 			userThreadResponse.postedDateFormatted = p_userThreadResponseData.response.postedDate.toDate().getFormattedDateTime();
@@ -559,7 +577,7 @@ var DiscussionsServiceManager = (function()
             }
             if(p_userThreadResponseData.parentUserResponse != undefined)
             {
-                userThreadResponse.parentResponseId = p_userThreadResponseData.parentUserResponse.response.id.toString();
+                userThreadResponse.parentResponseId = p_userThreadResponseData.parentUserResponse.id.toString();
                 userThreadResponse.parentResponseTitle = p_userThreadResponseData.parentUserResponse.response.title;
             }
 			return userThreadResponse;
@@ -595,6 +613,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserTopic
 													objects will be passed to this method when it is invoked.
 		*/
+		/*
 		this.getUserTopicsByUserIdAndCourseList = function(p_userId, p_courseList, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -607,6 +626,28 @@ var DiscussionsServiceManager = (function()
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 			
 		};
+		*/
+		
+		/**
+			Makes a request to get all user topics for the user that is currently authenticated.
+			
+			@param	{String}	p_courseList		The courses to get user topics for.
+			@param	{Array}		p_requestHeaders	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserTopic
+													objects will be passed to this method when it is invoked.
+		*/
+		this.getUserTopicsByCourseListForMe = function(p_courseList, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_courseList, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("threads.userTopics");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/me/userTopics?courses=" + p_courseList, p_requestHeaders, _userTopicsByUserSuccessHandler, _userTopicsByUserErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+			
+		};
+		
 		/**
 			Makes a request to get a user topic by id for a specific user.
 			
@@ -616,6 +657,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of responseCounts
 													objects will be passed to this method when it is invoked.
 		*/
+		/*
 		this.getUserTopicById = function(p_userId, p_topicId, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -625,6 +667,26 @@ var DiscussionsServiceManager = (function()
 			_wmm.mark("threads.userTopicById");
 			
 			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/usertopics/" + p_userId + "-" + p_topicId, p_requestHeaders, _getUserTopicByIdSuccessHandler, _getUserTopicByIdErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;			
+		};
+		*/
+		
+		/**
+			Makes a request to get a user topic by id for the user that is currently authenticated.
+			
+			@param	{String}	p_userTopicId		The ID of the UserTopic to retrieve.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserTopic
+													objects will be passed to this method when it is invoked.
+		*/
+		this.getUserTopicByIdForMe = function(p_userTopicId, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_userTopicId, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("threads.userTopicById");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/me/usertopics/" + p_userTopicId, p_requestHeaders, _getUserTopicByIdSuccessHandler, _getUserTopicByIdErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;			
 		};
 
@@ -637,6 +699,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserThreadResponse
 													objects will be passed to this method when it is invoked.
 		*/
+		/*
 		this.getUserResponseById = function(p_userId, p_responseId, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -646,6 +709,27 @@ var DiscussionsServiceManager = (function()
 			_wmm.mark("threads.userResponseById");
 			
 			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/userresponses/" + p_userId + "-" + p_responseId, p_requestHeaders, _userResponseByIdSuccessHandler, _userResponseByIdErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+			
+		};
+		*/
+		
+		/**
+			Makes a request to get a single user response by response id for the user that is currently authenticated.
+			
+			@param	{String}	p_userResponseId	The id of the UserResponse to retrieve.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserThreadResponse
+													objects will be passed to this method when it is invoked.
+		*/
+		this.getUserResponseByIdForMe = function(p_userResponseId, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_userResponseId, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("threads.userResponseById");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/me/userresponses/" + p_userResponseId, p_requestHeaders, _userResponseByIdSuccessHandler, _userResponseByIdErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 			
 		};
@@ -659,6 +743,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserThreadResponse
 													objects will be passed to this method when it is invoked.
 		*/
+		/*
 		this.getUserResponsesByTopicId = function(p_userId, p_topicId, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -668,6 +753,27 @@ var DiscussionsServiceManager = (function()
 			_wmm.mark("threads.userResponsesToTopic");
 			
 			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/topics/" + p_topicId + "/userresponses", p_requestHeaders, _responsesByTopicSuccessHandler, _responsesByTopicErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+			
+		};
+		*/
+		
+		/**
+			Makes a request to get the set of user-specific responses to a given topic for the user that is currently authenticated.
+			
+			@param	{String}	p_topicId			The topic ID to get the responses to.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserThreadResponse
+													objects will be passed to this method when it is invoked.
+		*/
+		this.getUserResponsesByTopicIdForMe = function(p_topicId, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_topicId, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("threads.userResponsesToTopic");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/me/topics/" + p_topicId + "/userresponses", p_requestHeaders, _responsesByTopicSuccessHandler, _responsesByTopicErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 			
 		};
@@ -681,6 +787,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserThreadResponse
 													objects will be passed to this method when it is invoked.
 		*/
+		/*
 		this.getUserResponsesByParentResponseId = function(p_userId, p_responseId, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -693,24 +800,69 @@ var DiscussionsServiceManager = (function()
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 			
 		};
+		*/
+		
+		/**
+			Makes a request to get the set of user-specific responses to a given response for the user that is currently authenticated.
+			
+			@param	{String}	p_responseId		The response ID to get the child responses to.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserThreadResponse
+													objects will be passed to this method when it is invoked.
+		*/
+		this.getUserResponsesByParentResponseIdForMe = function(p_responseId, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_responseId, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("threads.userResponsesToResponse");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/me/responses/" + p_responseId + "/userresponses", p_requestHeaders, _responsesByResponseSuccessHandler, _responsesByResponseErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+			
+		};
 
 		
 		/**
 			Makes a request to get the set responses that were made directly to responses authored by the provided user.
 			
 			@param	{String}	p_userId			The user ID to get responses for.
+			@param	{String}	p_courseList		The semi-colon delimited list of course ID's to get responses within.
 			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
 			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserThreadResponse
 													objects will be passed to this method when it is invoked.
 		*/
-		this.getResponsesToAuthoredResponsesByUserId = function(p_userId, p_requestHeaders, p_callback)
+		/*
+		this.getResponsesToAuthoredResponsesByUserId = function(p_userId, p_courseList, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
+			VariableValidator.require(this, p_courseList, "string");
 			VariableValidator.optional(this, p_requestHeaders, "Array");
 			VariableValidator.optional(this, p_callback, "function");
 			_wmm.mark("threads.userResponsesToMe");
 			
-			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/authoredResponses/userResponses?includeCounts=false&markedAsRead=false", p_requestHeaders, _responsesToAuthoredResponsesSuccessHandler, _responsesToAuthoredResponsesErrorHandler);
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/authoredResponses/userResponses?includeCounts=false&markedAsRead=false&courses=" + p_courseList, p_requestHeaders, _responsesToAuthoredResponsesSuccessHandler, _responsesToAuthoredResponsesErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+			
+		};
+		*/
+		
+		/**
+			Makes a request to get the set responses that were made directly to responses authored by the user that is currently authenticated.
+			
+			@param	{String}	p_courseList		The semi-colon delimited list of course ID's to get responses within.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserThreadResponse
+													objects will be passed to this method when it is invoked.
+		*/
+		this.getResponsesToAuthoredResponsesForMe = function(p_courseList, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_courseList, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("threads.userResponsesToMe");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/me/authoredResponses/userResponses?includeCounts=false&markedAsRead=false&courses=" + p_courseList, p_requestHeaders, _responsesToAuthoredResponsesSuccessHandler, _responsesToAuthoredResponsesErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 			
 		};
@@ -725,6 +877,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Function}	[p_callback]		A method to call when the request is complete. The newly created UserThreadResponse
 													object will be passed to this method when it is invoked.
 		*/
+		/*
 		this.postResponseToTopic = function(p_userId, p_topicId, p_data, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -734,6 +887,27 @@ var DiscussionsServiceManager = (function()
 			VariableValidator.optional(this, p_callback, "function");
 			
 			var transactionId = _ajaxManager.post(this.serviceLocation + "/users/" + p_userId + "/topics/" + p_topicId + "/responses", p_data, p_requestHeaders, _postResponseToTopicSuccessHandler, _postResponseToTopicErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+		};
+		*/
+		
+		/**
+			Makes a request to post a discussion response by the user that is currently authenticated to a given topic.
+			
+			@param	{String}	p_topicId			The topic ID to post the response to.
+			@param	{String}	p_data				The data to include in the post.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. The newly created UserThreadResponse
+													object will be passed to this method when it is invoked.
+		*/
+		this.postMyResponseToTopic = function(p_topicId, p_data, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_topicId, "string");
+			VariableValidator.require(this, p_data, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			
+			var transactionId = _ajaxManager.post(this.serviceLocation + "/me/topics/" + p_topicId + "/responses", p_data, p_requestHeaders, _postResponseToTopicSuccessHandler, _postResponseToTopicErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 		};
 		
@@ -747,6 +921,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Function}	[p_callback]		A method to call when the request is complete. The newly created UserThreadResponse
 													object will be passed to this method when it is invoked.
 		*/
+		/*
 		this.postResponseToResponse = function(p_userId, p_responseId, p_data, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -756,6 +931,27 @@ var DiscussionsServiceManager = (function()
 			VariableValidator.optional(this, p_callback, "function");
 			
 			var transactionId = _ajaxManager.post(this.serviceLocation + "/users/" + p_userId + "/responses/" + p_responseId + "/responses", p_data, p_requestHeaders, _postResponseToTopicSuccessHandler, _postResponseToTopicErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+		};
+		*/
+		
+		/**
+			Makes a request to post a discussion response by the user that is currently authenticated to a given response.
+			
+			@param	{String}	p_responseId		The response ID to post the response to.
+			@param	{String}	p_data				The data to include in the post.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. The newly created UserThreadResponse
+													object will be passed to this method when it is invoked.
+		*/
+		this.postMyResponseToResponse = function(p_responseId, p_data, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_responseId, "string");
+			VariableValidator.require(this, p_data, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			
+			var transactionId = _ajaxManager.post(this.serviceLocation + "/me/responses/" + p_responseId + "/responses", p_data, p_requestHeaders, _postResponseToTopicSuccessHandler, _postResponseToTopicErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 		};
 
@@ -768,6 +964,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
 			@param	{Function}	[p_callback]		A method to call when the request is complete. 
 		*/
+		/*
 		this.setResponseReadStatus = function(p_userId, p_responseId, p_data, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -777,6 +974,26 @@ var DiscussionsServiceManager = (function()
 			VariableValidator.optional(this, p_callback, "function");
 			
 			var transactionId = _ajaxManager.post(this.serviceLocation + "/users/" + p_userId + "/responses/" + p_responseId + "/readStatus", p_data, p_requestHeaders, _setResponseReadStatusSuccessHandler, _setResponseReadStatusErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+		};
+		*/
+		
+		/**
+			Makes a request to post the read status of a response to a given topic for the user that is currently authenticated.
+			
+			@param	{String}	p_responseId		The response ID to set the read status on.
+			@param	{String}	p_data				The data to include in the post.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. 
+		*/
+		this.setResponseReadStatusForMe = function(p_responseId, p_data, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_responseId, "string");
+			VariableValidator.require(this, p_data, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			
+			var transactionId = _ajaxManager.post(this.serviceLocation + "/me/responses/" + p_responseId + "/readStatus", p_data, p_requestHeaders, _setResponseReadStatusSuccessHandler, _setResponseReadStatusErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 		};
 		
@@ -789,6 +1006,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
 			@param	{Function}	[p_callback]		A method to call when the request is complete. 
 		*/
+		/*
 		this.getResponseCountsToTopic = function(p_userId, p_topicId, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -800,6 +1018,25 @@ var DiscussionsServiceManager = (function()
 			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/topics/" + p_topicId + "/responseCounts", p_requestHeaders, _getResponseCountsToTopicSuccessHandler, _getResponseCountsErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 		};
+		*/
+		
+		/**
+			Makes a request to get response counts for a given topic for the user that is currently authenticated.
+			
+			@param	{String}	p_topicId			The topic ID to get response counts for.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. 
+		*/
+		this.getResponseCountsToTopicForMe = function(p_topicId, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_topicId, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("threads.resopnseCountsToTopic");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/me/topics/" + p_topicId + "/responseCounts", p_requestHeaders, _getResponseCountsToTopicSuccessHandler, _getResponseCountsErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+		};
 		
 		/**
 			Makes a request to get response counts for a given response.
@@ -809,6 +1046,7 @@ var DiscussionsServiceManager = (function()
 			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
 			@param	{Function}	[p_callback]		A method to call when the request is complete. 
 		*/
+		/*
 		this.getResponseCountsToResponse = function(p_userId, p_responseId, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -818,6 +1056,25 @@ var DiscussionsServiceManager = (function()
 			_wmm.mark("threads.resopnseCountsToResponse");
 			
 			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/responses/" + p_responseId + "/responseCounts", p_requestHeaders, _getResponseCountsToResponseSuccessHandler, _getResponseCountsErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+		};
+		*/
+		
+		/**
+			Makes a request to get response counts for a given response for the user that is currently authenticated.
+			
+			@param	{String}	p_responseId		The reponse ID to get response counts for.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. 
+		*/
+		this.getResponseCountsToResponseForMe = function(p_responseId, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_responseId, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("threads.resopnseCountsToResponse");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/me/responses/" + p_responseId + "/responseCounts", p_requestHeaders, _getResponseCountsToResponseSuccessHandler, _getResponseCountsErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 		};
 

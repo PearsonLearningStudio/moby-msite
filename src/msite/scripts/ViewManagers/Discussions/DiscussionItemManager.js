@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		TimS
@@ -69,7 +86,11 @@ var DiscussionItemManager = (function()
 			Public Methods
 		************************************/
 		
-		
+		/**
+			Takes a collection of Topics and creates a DiscussionItem for each one and stores them
+			for later.
+			@param	{Array}		p_topics	A collection of Topics to add
+		*/
 		this.addTopics = function(p_topics)
 		{
 		    for(var i = 0; i < p_topics.length; i++)
@@ -97,7 +118,12 @@ var DiscussionItemManager = (function()
 		    }
 		    _topicsLoaded = true;
 		};
-				
+		
+		/**
+			Takes a collection of CourseItems and creates a DiscussionItem for each one and stores them
+			for later.
+			@param	{Array}		p_courseItems	A collection of CourseItems to add
+		*/
 		this.addClosedThreads = function(p_courseItems)
 		{
 		    for(var i = 0; i < p_courseItems.length; i++)
@@ -117,12 +143,20 @@ var DiscussionItemManager = (function()
 		    }
 		    _closedThreadsLoaded = true;
 		};
-
+		
+		/**
+			Tells whether or not both topics and course items have been loaded into memory or not.
+			@returns	{Boolean}	true if both are loaded, false otherwise
+		*/
         this.areAllItemsLoaded = function()
         {
             return _topicsLoaded && _closedThreadsLoaded;
         };
         
+        /**
+			Retrieves the collection of DiscussionItems stored in memory.
+			@returns	{Array}	The collection of DiscussionItems
+		*/
         this.getDiscussionItems = function()
         {
             _discussionItems.sort(_discussionItemSort);

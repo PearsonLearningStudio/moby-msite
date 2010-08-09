@@ -1,4 +1,21 @@
-﻿/**
+﻿/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/**
 	@class
 	@author		TimS
 	
@@ -166,7 +183,7 @@ var DropboxServiceManager = (function()
 			submission.submissionDateISO8601 = p_submissionData.submissionDate;
 			submission.submissionDate = p_submissionData.submissionDate.toDate();
 			submission.submissionDateFormatted = p_submissionData.submissionDate.toDate().getFormattedDateTime();
-			submission.comments = p_submissionData.comments.stripHtmlTags();
+			submission.comments = p_submissionData.comments.stripHtmlTags(true);
 			submission.basketTitle = p_basketData.title;
 			
 			//Find the course id in the "basketScopes" array
@@ -206,6 +223,7 @@ var DropboxServiceManager = (function()
 			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserTopic
 													objects will be passed to this method when it is invoked.
 		*/
+		/*
 		this.getSubmissionsByUserIdAndCourseIds = function(p_userId, p_courseIds, p_requestHeaders, p_callback)
 		{
 			VariableValidator.require(this, p_userId, "string");
@@ -215,6 +233,27 @@ var DropboxServiceManager = (function()
 			_wmm.mark("dropbox");
 			
 			var transactionId = _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/baskets/submissions?view=inbox&courses=" + p_courseIds, p_requestHeaders, _submissionsByUserSuccessHandler, _submissionsByUserErrorHandler);
+			_callbacksFromTransactionIds[transactionId] = p_callback;
+			
+		};
+		*/
+		
+		/**
+			Makes a request to get all dropbox submissions for the user that is currently authenticated.
+			
+			@param	{String}	p_courseIds		    The semi-colon list of course ids to get submissions for.
+			@param	{Array}		[p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+			@param	{Function}	[p_callback]		A method to call when the request is complete. An array of UserTopic
+													objects will be passed to this method when it is invoked.
+		*/
+		this.getSubmissionsByCourseIdsForMe = function(p_courseIds, p_requestHeaders, p_callback)
+		{
+			VariableValidator.require(this, p_courseIds, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			VariableValidator.optional(this, p_callback, "function");
+			_wmm.mark("dropbox");
+			
+			var transactionId = _ajaxManager.get(this.serviceLocation + "/me/baskets/submissions?view=inbox&courses=" + p_courseIds, p_requestHeaders, _submissionsByUserSuccessHandler, _submissionsByUserErrorHandler);
 			_callbacksFromTransactionIds[transactionId] = p_callback;
 			
 		};

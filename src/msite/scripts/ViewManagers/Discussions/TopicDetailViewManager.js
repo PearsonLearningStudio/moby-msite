@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		MacA
@@ -110,7 +127,7 @@ var TopicDetailViewManager = (function()
 			$("form span.ajaxLoadingThread").show();
 			try
 			{
-				_instance.newThreadPostCallback(_instance.currentTopic.id, $("#threadSubject").val(), $("#threadResponseArea").val());
+				_instance.newThreadPostCallback(_instance.currentTopic.topicId, $("#threadSubject").val(), $("#threadResponseArea").val());
 	        }
 	        catch(e)
 	        {
@@ -189,7 +206,12 @@ var TopicDetailViewManager = (function()
 			$("#cancelBtn").bind("click", _respondCancel);
 			$("#respondBtn").bind("click", _respondSubmit);
 		};		
-
+		
+		/**
+			Creates elements on the view to show responses, and adds a click handler to each response.
+			@param	{Array}	p_userThreadResponses	The collection of UserThreadResponses to display on the view
+			@param	{Function}	p_responseClickHandler	The method to call when a response is clicked
+		*/
 		this.createResponsesOnView = function(p_userThreadResponses, p_responseClickHandler)
 		{		
 			//Hide the loading image
@@ -203,6 +225,11 @@ var TopicDetailViewManager = (function()
 			}
 		};
 		
+		/**
+			Creates elements on the view to show a new response, and adds a click handler to the response.
+			@param	{UserThreadResponses}	p_userThreadResponse	The UserResponse to display on the view
+			@param	{Function}	p_responseClickHandler	The method to call when a response is clicked
+		*/
 		this.addNewResponseToView = function(p_userThreadResponse, p_responseClickHandler)
 		{
 			var clonedItem = _createReponseElementClone(p_userThreadResponse);
@@ -211,6 +238,10 @@ var TopicDetailViewManager = (function()
 		};
 
 		
+		/**
+			Displays the topic detail view for a specific topic.
+			@param	{UserTopic}	p_topic	The UserTopic to display on the view
+		*/
 		this.show = function(p_topic)
 		{
 		    this.currentTopic = p_topic;
@@ -239,6 +270,9 @@ var TopicDetailViewManager = (function()
 			$("#responsesByTopic").show();
 		};
 		
+		/**
+			Hides the topic detail view for the current topic.
+		*/
 		this.hide = function()
 		{
 			//Hide the topic responses div
@@ -255,6 +289,10 @@ var TopicDetailViewManager = (function()
 			_responsesByTopicCollection = $();
 		};
 		
+		/**
+			Updates the response counts on the view for a specified topic.
+			@param	{ResponseCounts}	p_responsCounts	The new response counts data
+		*/
 		this.updateResponseCountsOnView = function(p_responseCounts)
 		{
 			if (p_responseCounts != undefined && p_responseCounts != null)
@@ -265,11 +303,18 @@ var TopicDetailViewManager = (function()
 			
 		};
 		
+		/**
+			Updates the response counts text on the view with the specified text.
+			@param	{String}	p_text	The text to display on the view
+		*/
 		this.setResponseCountsText = function(p_text)
 		{
 			$("#responsesByTopic span.replies, #responsesByTopic span.repliesunread").html(p_text);
 		};
 		
+		/**
+			Displays the error message for when responses to the topic fail to load.
+		*/
 		this.showResponsesLoadError = function()
 		{
 			//Hide the loading image

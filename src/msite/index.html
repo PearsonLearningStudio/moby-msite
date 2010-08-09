@@ -1,14 +1,41 @@
 <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
 <html>
 	<head>
-	<title>Happenings</title>
-	<meta xmlns="http://www.w3.org/1999/xhtml" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-	<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" media="screen">
-			  @import "styles/default/style.css";
-    </style>
-    <link rel="apple-touch-icon" href="" />
-	<link rel="shortcut icon" href="" />
-</head>
+		<title>Happenings</title>
+		<meta xmlns="http://www.w3.org/1999/xhtml" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+		<style xmlns="http://www.w3.org/1999/xhtml" type="text/css" media="screen">
+				  @import "styles/default/style.css";
+		</style>
+		<link rel="apple-touch-icon" href="" />
+		<link rel="shortcut icon" href="" />
+		<script type="text/javascript" src="scripts/ConfigSettings.js"></script>
+		<!-- Package:CombineScripts outputName="index_preload_{hash}.js" outputDirectory="scripts" -->
+		<script type="text/javascript" src="scripts/ViewManagers/ClientStringManager.js"></script>
+		<script type="text/javascript" src="scripts/preloadUtils.js"></script>
+		<!-- End Package:CombineScripts -->
+		<script type="text/javascript">
+			// logic to set custom stylesheet needs to be at the top of the
+			// page to prevent the default style from showing at all
+		    var csm = ClientStringManager.getInstance();
+			
+			var cs = csm.getClientString();
+
+			// If client string is not set in client string manager yet (no cookie),
+			// check for it on the query string.
+			if (cs == null || cs == undefined || cs == "") {
+			    cs = getQueryStringValue("cs");
+			}
+            // If the clienstring also was not on the querystring, then it should be available via configsettings (which is set based on the host)
+			if (cs == null || cs == undefined || cs == "") {
+			    cs = configSettings.clientstring;
+			}		
+	
+			csm.setClientString(cs);
+			applyBrandingToPage(cs);
+	        
+		</script>
+		
+	</head>
 
 	<body id="indexBody">
 		
@@ -60,18 +87,21 @@
 		
 		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>
 		
-	    <script type="text/javascript" src="scripts/ServiceDomains.js"></script>
 	    <script type="text/javascript" src="scripts/ThirdParty/jquery-1.4.2.min.js"></script>
 	    <script type="text/javascript" src="scripts/ThirdParty/json2.js"></script>
 	    <script type="text/javascript" src="scripts/wmm.js"></script>
 	    
+	    <script type="text/javascript">
+	      	    _wmm.mark("mobile.javascript.retrieval");
+	    </script>
+	    
 		<!-- Package:CombineScripts outputName="index_{hash}.js" outputDirectory="scripts" -->	
 		<script type="text/javascript" src="scripts/MobyAppInitializer.js"></script>	
 	    <script type="text/javascript" src="scripts/VariableValidator.js"></script>
-	    <script type="text/javascript" src="scripts/Utils.js"></script>
 	    <script type="text/javascript" src="scripts/EventDispatcher.js"></script>
 	    <script type="text/javascript" src="scripts/CrossDomainInitializer.js"></script>
 	    <script type="text/javascript" src="scripts/MobyDataManager.js"></script>
+	    <script type="text/javascript" src="scripts/Utils.js"></script>
 	    <script type="text/javascript" src="scripts/Events/CustomEvent.js"></script>
 	    <script type="text/javascript" src="scripts/Events/DomainStatusEvent.js"></script>
 	    <script type="text/javascript" src="scripts/Events/MobyDataEvent.js"></script>
@@ -99,7 +129,6 @@
 	    <script type="text/javascript" src="scripts/ServiceManagers/GradesServiceManager.js"></script>
 	    <script type="text/javascript" src="scripts/ServiceManagers/DropboxServiceManager.js"></script>
 	    <script type="text/javascript" src="scripts/ViewManagers/MobyWorkflowManager.js"></script>
-	    <script type="text/javascript" src="scripts/ViewManagers/ClientStringManager.js"></script>
 	    <script type="text/javascript" src="scripts/ViewManagers/Happenings/ViewStateManager.js"></script>
 	    <script type="text/javascript" src="scripts/ViewManagers/Happenings/HappeningItemManager.js"></script>
 	    <script type="text/javascript" src="scripts/ViewManagers/Happenings/DetailViewManager.js"></script>
@@ -112,8 +141,12 @@
 	    <script type="text/javascript" src="scripts/ViewManagers/Discussions/DiscussionItemManager.js"></script>
  		<!-- End Package:CombineScripts -->
  		
+ 		<script type="text/javascript">
+ 		    _wmm.measure("Moby.Javascript.Download.NetworkTime", "mobile.javascript.retrieval");
+       	</script>
+ 		
     	<script type="text/javascript">
-	        _wmm.mark("services.retrieval");
+    	    _wmm.mark("moby.application");
 	    </script>
 
 	    <script type="text/javascript">
@@ -141,7 +174,8 @@
 				crossDomainReady = true;
 				if (domReady)
 				{
-					mobyAppInitializer.startApplication();
+				    mobyAppInitializer.startApplication();
+				    _wmm.measure("Moby.Init", "moby.application");
 				}
 			};
 			
@@ -154,21 +188,20 @@
 		    crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
 		    crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_READY, crossDomainReadyHandler, true);
 		    crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_ERROR, crossDomainErrorHandler, true);
-		    crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", serviceDomains[SERVICE_DOMAIN_PROXY]);
+		    crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", configSettings[SERVICE_DOMAIN_PROXY]);
 		    
 			$(document).ready(function()
 		    {
 				domReady = true;
 				if (crossDomainReady)
 				{
-					mobyAppInitializer.startApplication();
+				    mobyAppInitializer.startApplication();
+				    _wmm.measure("Moby.Init", "moby.application");
 				}
 			});
 			
 	    </script>
-	    <script type="text/javascript">
-            _wmm.measure("Moby.Services.Download.NetworkTime", "services.retrieval");
-       	</script>
+
 
 	</body>
 </html>

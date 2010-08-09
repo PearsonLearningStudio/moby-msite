@@ -8,6 +8,24 @@
 		</style>
 		<link rel="apple-touch-icon" href="" />
 		<link rel="shortcut icon" href="" />
+		<script type="text/javascript" src="scripts/ConfigSettings.js"></script>
+		<!-- Package:CombineScripts outputName="login_preload_{hash}.js" outputDirectory="scripts" -->
+		<script type="text/javascript" src="scripts/ViewManagers/ClientStringManager.js"></script>
+		<script type="text/javascript" src="scripts/preloadUtils.js"></script>
+		
+		<!-- End Package:CombineScripts -->
+		<script type="text/javascript">
+			// logic to set custom stylesheet needs to be at the top of the
+			// page to prevent the default style from showing at all
+			var csm = ClientStringManager.getInstance();
+			var cs = getQueryStringValue("cs");
+			if (cs == null || cs == undefined || cs == "") {
+			    cs = configSettings.clientstring;
+			}	
+			
+			csm.setClientString(cs);
+			applyBrandingToPage(cs);
+		</script>
 	</head>
 
 	<body id="loginPage">
@@ -55,7 +73,7 @@
 		
 		<iframe id="crossDomainCommunicationFrame" src="" style="display:none"></iframe>
 
- 		<script type="text/javascript" src="scripts/ServiceDomains.js"></script>
+ 		
 		<script type="text/javascript" src="scripts/ThirdParty/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="scripts/ThirdParty/json2.js"></script>
 			    
@@ -70,7 +88,6 @@
         <script type="text/javascript" src="scripts/ValueObjects/CrossFrameMessage.js"></script>
         <script type="text/javascript" src="scripts/ServiceManagers/AjaxManager.js"></script>
         <script type="text/javascript" src="scripts/ServiceManagers/SessionManager.js"></script>
-        <script type="text/javascript" src="scripts/ViewManagers/ClientStringManager.js"></script>
  		<!-- End Package:CombineScripts -->
 
 
@@ -87,12 +104,16 @@
 				crossDomainInitializer = CrossDomainInitializer.getInstance();
 			
 				sessionManager = SessionManager.getInstance();
-				sessionManager.serviceLocation = serviceDomains[SERVICE_DOMAIN_PROXY];
+				sessionManager.serviceLocation = configSettings[SERVICE_DOMAIN_PROXY];
 				
 				clientStringManager = ClientStringManager.getInstance();
 				cs = getQueryStringValue("cs");
+				if (cs == null || cs == undefined || cs == "") 
+				{
+				    cs = configSettings.clientstring;
+				}
 			
-				applyBrandingToPage($("head"), cs);
+			
 				if (cs == null || cs == undefined || cs == "")
 				{
 					$("#loadingMessageContainer").hide();
@@ -101,11 +122,10 @@
 				}
 				else
 				{
-					clientStringManager.setClientString(cs);
 					crossDomainInitializer.originUrl = window.location.protocol + "//" + document.domain;
 					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_READY, crossDomainReadyHandler, true);
 					crossDomainInitializer.eventDispatcher.addEventListener(DomainStatusEvent.DOMAIN_ERROR, crossDomainErrorHandler, true);
-					crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", serviceDomains[SERVICE_DOMAIN_PROXY]);
+					crossDomainInitializer.initializeDomain("crossDomainCommunicationFrame", configSettings[SERVICE_DOMAIN_PROXY]);
 					
 					
 					$("#registerLink").bind("click", registerLinkClickHandler);

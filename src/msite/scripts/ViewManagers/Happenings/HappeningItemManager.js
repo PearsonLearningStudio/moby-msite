@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		TimS
@@ -97,7 +114,11 @@ var HappeningItemManager = (function()
 			Public Methods
 		************************************/
 		
-		
+		/**
+			Creates HappeningItems out of each collection of other items produced by all the Service Managers.
+			@param	{Array}		p_items		The collection of items to be converted to HappeningItems and added to memory.
+			@param	{Function}	p_conversionFunction	A function used to convert the collection of items to HappeningItems
+		*/
 		this.addItems = function(p_items, p_conversionFunction)
 		{
 		    for(var i = 0; i < p_items.length; i++)
@@ -108,7 +129,11 @@ var HappeningItemManager = (function()
 		    _isSorted = false;
 		};
 		
-		
+		/**
+			Removes a HappeningItem from the collection of items based on the ID.
+			@param	{String}	p_itemId	The ID of the HappeningItem
+			@return	The HappeningItem that was removed
+		*/
 		this.removeItemById = function(p_itemId)
 		{
 			for(var i = 0; i < _happeningItems.length; i++)
@@ -122,7 +147,11 @@ var HappeningItemManager = (function()
 		    return null;
 		};
 		
-		
+		/**
+			Retrieves a collection of HappeningItems based on a filter function.
+			@param	{Function}	p_FilterFunction	A method used to filter which items to retrun
+			@return	{Array}	The collection of HappeningItems
+		*/
 		this.getItems = function(p_filterFunction)
 		{
 		    if(_isSorted == false)
@@ -154,6 +183,11 @@ var HappeningItemManager = (function()
 		};
 		
 		
+		/**
+			Converts a UserAnnouncement object to a HappeningItem and returns it.
+			@param	{UserAnnouncement}	p_announcement	The UserAnnouncement to convert
+			@return	{HappeningItem}	The HappeningItem based on the UserAnnouncement
+		*/
 		this.convertAnnouncement = function(p_announcement)
 		{
 		    var happeningItem = new HappeningItem();
@@ -170,7 +204,12 @@ var HappeningItemManager = (function()
 		    
 		    return happeningItem;
 		};
-
+		
+		/**
+			Converts a DropboxSubmission object to a HappeningItem and returns it.
+			@param	{DropboxSubmission}	p_submission	The DropboxSubmission to convert
+			@return	{HappeningItem}	The HappeningItem based on the DropboxSubmission
+		*/
 		this.convertDropboxSubmission = function(p_submission)
 		{
 		    var happeningItem = new HappeningItem();
@@ -188,6 +227,11 @@ var HappeningItemManager = (function()
 		    return happeningItem;
 		};
 		
+		/**
+			Converts a ItemGrade object to a HappeningItem and returns it.
+			@param	{ItemGrade}	p_itemGrade	The ItemGrade to convert
+			@return	{HappeningItem}	The HappeningItem based on the ItemGrade
+		*/
 		this.convertItemGrade = function(p_itemGrade)
 		{
 		    var happeningItem = new HappeningItem();
@@ -205,6 +249,11 @@ var HappeningItemManager = (function()
 		    return happeningItem;
 		};
 		
+		/**
+			Converts a CourseItem object to a HappeningItem and returns it.
+			@param	{CourseItem}	p_courseItem	The CourseItem to convert
+			@return	{HappeningItem}	The HappeningItem based on the CourseItem
+		*/
 		this.convertCourseItem = function(p_courseItem)
 		{
             var title = "";
@@ -232,6 +281,11 @@ var HappeningItemManager = (function()
 		    return happeningItem;
 		};
 		
+		/**
+			Converts a UserTopic object to a HappeningItem and returns it.
+			@param	{UserTopic}	p_userTopic		The UserTopic to convert
+			@return	{HappeningItem}	The HappeningItem based on the UserTopic
+		*/
 		this.convertTopic = function(p_userTopic)
 		{
 		    var happeningItem = new HappeningItem();
@@ -249,6 +303,11 @@ var HappeningItemManager = (function()
 		    return happeningItem;
 		};
 
+		/**
+			Converts a UserResponse object to a HappeningItem and returns it.
+			@param	{UserResponse}	p_response	The UserResponse to convert
+			@return	{HappeningItem}	The HappeningItem based on the UserResponse
+		*/
 		this.convertResponse = function(p_response)
 		{
 		    var happeningItem = new HappeningItem();
@@ -267,6 +326,11 @@ var HappeningItemManager = (function()
 		};
 		
 		
+		/**
+			Determines if a HappeningItem has a type of "CourseItem".
+			@param	{HappeningItem}	p_item	The HappeningItem to check
+			@return	{Boolean}	true if the Happening item matches the type, false otherwise
+		*/
 		this.thingsHappeningSoonFilter = function(p_item)
 		{
             if(p_item.type == HappeningItem.COURSEITEM_TYPE)
@@ -275,6 +339,11 @@ var HappeningItemManager = (function()
                 return false;
         };
         
+        /**
+			Determines if a HappeningItem has a type of "CourseItem".
+			@param	{HappeningItem}	p_item	The HappeningItem to check
+			@return	{Boolean}	true if the Happening item matches the type, false otherwise
+		*/
         this.thingsThatHappenedFilter = function(p_item)
 		{
             if(p_item.type != HappeningItem.COURSEITEM_TYPE)
@@ -282,7 +351,12 @@ var HappeningItemManager = (function()
             else    
                 return false;
         };
-
+		
+		/**
+			Determines if a HappeningItem has a type of "Announcement".
+			@param	{HappeningItem}	p_item	The HappeningItem to check
+			@return	{Boolean}	true if the Happening item matches the type, false otherwise
+		*/
         this.announcementFilter = function(p_item)
 		{
             if(p_item.type == HappeningItem.ANNOUNCEMENT_TYPE)
@@ -290,7 +364,12 @@ var HappeningItemManager = (function()
             else    
                 return false;
         };
-
+		
+		/**
+			Determines if a HappeningItem has a type of "Grade".
+			@param	{HappeningItem}	p_item	The HappeningItem to check
+			@return	{Boolean}	true if the Happening item matches the type, false otherwise
+		*/
         this.gradeFilter = function(p_item)
 		{
             if(p_item.type == HappeningItem.GRADE_TYPE)
@@ -298,7 +377,12 @@ var HappeningItemManager = (function()
             else    
                 return false;
         };
-
+		
+		/**
+			Determines if a HappeningItem has a type of "CourseItem".
+			@param	{HappeningItem}	p_item	The HappeningItem to check
+			@return	{Boolean}	true if the Happening item matches the type, false otherwise
+		*/
         this.courseItemFilter = function(p_item)
 		{
             if(p_item.type == HappeningItem.COURSEITEM_TYPE)
@@ -307,6 +391,11 @@ var HappeningItemManager = (function()
                 return false;
         };
         
+        /**
+			Determines if a HappeningItem has a type of "ThreadResponse" or ThreadTopic.
+			@param	{HappeningItem}	p_item	The HappeningItem to check
+			@return	{Boolean}	true if the Happening item matches the type, false otherwise
+		*/
         this.discussionFilter = function(p_item)
 		{
             if(p_item.type == HappeningItem.THREADRESPONSE_TYPE || p_item.type == HappeningItem.THREADTOPIC_TYPE)
@@ -315,6 +404,11 @@ var HappeningItemManager = (function()
                 return false;
         };
         
+        /**
+			Determines if a HappeningItem has a type of "Dropbox".
+			@param	{HappeningItem}	p_item	The HappeningItem to check
+			@return	{Boolean}	true if the Happening item matches the type, false otherwise
+		*/
         this.dropboxFilter = function(p_item)
 		{
             if(p_item.type == HappeningItem.DROPBOX_TYPE)

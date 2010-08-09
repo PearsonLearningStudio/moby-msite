@@ -1,3 +1,21 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/**
 /**
 	@class
 	@author		MacA
@@ -182,13 +200,17 @@ var ActiveTopicsViewManager = (function()
 		************************************/
 		
 		/**
-			Handles any initialization needed by the view manager, such as wiring up event handlers
-			@return		none
+			Handles any initialization needed by the view manager, such as wiring up event handlers.
 		*/
 		this.initialize = function()
 		{
 		};
 		
+		/**
+			Updates the response count numbers on the UI for a specified Topic.
+			@param	{String}	p_topicId	The ID of the topic to update
+			@param	{ResponseCounts}	p_responseCounts	The new response counts for the Topic
+		*/
 		this.updateResponseCountsOnView = function(p_topicId, p_responseCounts)
 		{
 			var topicReponseCounts = $("#topic" + p_topicId);
@@ -205,7 +227,13 @@ var ActiveTopicsViewManager = (function()
 				topicReponseCounts.find("span.repliesunread, span.replies").removeClass('repliesunread').addClass('replies');
 			}
 		};
-				
+		
+		/**
+			Creates the course elements on the UI and assigns click handlers for each course.
+			@param	{Array}		p_courses	The collection of Course objects to create UI elements for
+			@param	{Function}	p_allTopicsClickHandler		A function to be called when the user clicks the 
+															"All ..." link for a given course
+		*/
 		this.createCoursesOnView = function(p_courses, p_allTopicsClickHandler)
 		{
 			for(var i = 0; i < p_courses.length; i++)
@@ -220,6 +248,12 @@ var ActiveTopicsViewManager = (function()
 		
 		};
 		
+		/**
+			Creates the discussions elements on the UI and assigns click handlers for each item.
+			@param	{Array}		p_discussionItems	The collection of discussion items to add.
+			@param	{Array}		p_courses			The collection of course objects
+			@param	{Function}	p_topicClickHandler	The callback function for when a topic is clicked
+		*/
 		this.createDiscussionItemsOnView = function(p_discussionItems, p_courses, p_topicClickHandler)
 		{		
 			var coursesWithTopics = [];
@@ -313,6 +347,10 @@ var ActiveTopicsViewManager = (function()
 			_loadCompleted = true;
 		};
 		
+		/**
+			Displays the view for active topics.
+			@param	{String}	[p_filteredCourseId]	A course ID to filter by
+		*/
 		this.show = function(p_filteredCourseId)
 		{
 			//Display the dropdown list
@@ -356,6 +394,9 @@ var ActiveTopicsViewManager = (function()
 			$(".closedtopic").hide();
 		};
 		
+		/**
+			Hides the view for active topics.
+		*/
 		this.hide = function()
 		{
 			//Hide the dropdown list

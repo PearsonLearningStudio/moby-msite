@@ -1,4 +1,21 @@
-﻿/**
+﻿/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/**
 	@class
 	@author		BobS
 		
@@ -190,7 +207,7 @@ var GradesServiceManager = (function()
             itemGrade.pointsSet = p_courseItemGradeData.grade.pointsSet;
             itemGrade.letterGrade = p_courseItemGradeData.grade.letterGrade;
             itemGrade.letterGradeSet = p_courseItemGradeData.grade.letterGradeSet;
-            itemGrade.comments = p_courseItemGradeData.grade.comments.stripHtmlTags();
+            itemGrade.comments = p_courseItemGradeData.grade.comments.stripHtmlTags(true);
 
             //Set synthetic/combined property values            
             _setFormattedGrades(itemGrade);
@@ -201,13 +218,13 @@ var GradesServiceManager = (function()
             itemGrade.courseTitle = courseTitle;
 
             return itemGrade;
-        }
+        };
 
         var _setFormattedGrades = function(p_itemGrade)
         {
             _setNumericGrade(p_itemGrade);
             _setCombinedGrade(p_itemGrade); // numericGrade MUST be set before calling this.
-        }
+        };
 
         var _setCombinedGrade = function(p_itemGrade)
         {
@@ -227,7 +244,7 @@ var GradesServiceManager = (function()
                 p_itemGrade.combinedGrade = p_itemGrade.letterGrade;
                 return;
             }
-        }
+        };
         
         var _setNumericGrade = function(p_itemGrade)
         {
@@ -237,7 +254,7 @@ var GradesServiceManager = (function()
                 return;
             }
             p_itemGrade.numericGrade == "";
-        }
+        };
         
 
         /************************************
@@ -250,11 +267,30 @@ var GradesServiceManager = (function()
 			@param	{String}	p_courseIds			The semi-colon list of course ids to get grades for.
 			@param  {Array}     [p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
         */
+        /*
         this.getGradesByUserIdAndCourseIds = function(p_userId, p_courseIds, p_requestHeaders)
 		{
+			VariableValidator.require(this, p_userId, "string");
+			VariableValidator.require(this, p_courseIds, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
             _wmm.mark("grades.all");
             _ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/courseitemgrades?courses=" + p_courseIds, p_requestHeaders, _gradesSuccessHandler, _gradesErrorHandler);
-        }
+        };
+        */
+        
+        /**
+			Makes a request to get course specific grades for the user that is currently authenticated.
+			
+			@param	{String}	p_courseIds			The semi-colon list of course ids to get grades for.
+			@param  {Array}     [p_requestHeaders]	An array of AjaxRequestHeader objects to attach to the request.
+        */
+        this.getGradesByCourseIdsForMe = function(p_courseIds, p_requestHeaders)
+		{
+			VariableValidator.require(this, p_courseIds, "string");
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+            _wmm.mark("grades.all");
+            _ajaxManager.get(this.serviceLocation + "/me/courseitemgrades?courses=" + p_courseIds, p_requestHeaders, _gradesSuccessHandler, _gradesErrorHandler);
+        };
 
     }
 

@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		TimS
@@ -103,8 +120,8 @@ var DetailViewManager = (function()
         };
 
         /**
-        Updates the Announcement Detail DOM elements with data from the given UserAnnouncement object.
-        @param		{UserAnnouncement}	p_announcement	The UserAnnouncement to show the deatils of on the page.
+			Updates the Announcement Detail DOM elements with data from the given UserAnnouncement object.
+			@param		{UserAnnouncement}	p_announcement	The UserAnnouncement to show the deatils of on the page.
         */
         var _updateCourseItemDetailView = function(p_courseItem)
         {
@@ -178,7 +195,7 @@ var DetailViewManager = (function()
 		    $("#recentResponsesDetailTitle").html(p_userTopic.containerInfo.contentItemTitle + " - " + p_userTopic.title);
 		    $("#recentResponsesDetailCountDescription").html(responseCountDescription);
 		    $("#recentResponsesDetailTopicLink").html("Go to " + p_userTopic.title);
-		    $("#recentResponsesDetailTopicLink").data("topicId", p_userTopic.id);
+		    $("#recentResponsesDetailTopicLink").data("userTopicId", p_userTopic.id);
 		    $("#recentResponsesDetailCourseTitle").html(p_userTopic.containerInfo.courseTitle);
 		    $("#recentResponsesDetailTime").html((new Date()).getFormattedTime());
 
@@ -196,7 +213,7 @@ var DetailViewManager = (function()
 		    $("#responsesToMeDetailParentSubject").html(p_response.parentResponseTitle);
 		    $("#responsesToMeDetailResponseLink").html("Go to " + p_response.topic.title);
 		    $("#responsesToMeDetailResponseLink").data({
-				"responseId": p_response.threadResponseId,
+				"responseId": p_response.id,
 				"courseId": p_response.topic.containerInfo.courseId,
 				"happeningsItemId": HappeningItem.THREADRESPONSE_TYPE + "-" + p_response.id
 			});
@@ -239,7 +256,11 @@ var DetailViewManager = (function()
 		/************************************
 			Public Methods
 		************************************/
-				
+		
+		/**
+			Displays a detailed view on the UI for a specific HappeningItem.
+			@param	{HappeningItem}		p_item		The item to show a detail view of
+		*/
 		this.displayDetailView = function(p_item)
 		{
 			if (!_backButtonInitialized)

@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		TimS
@@ -225,6 +242,9 @@ var ResponseDetailViewManager = (function()
 			$("#responsesByResponse").show();
 		};
 		
+		/**
+			Hides the response detail view from the user
+		*/
 		this.hide = function()
 		{
 			//Hide the response detail div
@@ -276,6 +296,10 @@ var ResponseDetailViewManager = (function()
 			_childResponsesCollection = $();
 		};
 		
+		/**
+			Updates the detail view with new response counts data
+			@param	{ResponseCounts}	p_responsecounts	The new response counts data
+		*/
 		this.updateResponseCountsOnView = function(p_responseCounts)
 		{
 			if (p_responseCounts != undefined && p_responseCounts != null)
@@ -285,11 +309,19 @@ var ResponseDetailViewManager = (function()
 			_updateResponseCountsOnView(this.currentResponse.responseCounts);
 		};
 		
+		/**
+			Updates the response counts text with the specified text.
+			@param	{String}	p_text	The text to render
+		*/
 		this.setResponseCountsText = function(p_text)
 		{
 			$("#responsesByResponse span.replies, #responsesByResponse span.repliesunread").html(p_text);
 		};
 		
+		
+		/**
+			Displays the error message for when reponses to a response fail to load.
+		*/
 		this.showResponsesLoadError = function()
 		{
 			//Hide the loading image

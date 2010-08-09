@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		MacA
@@ -127,7 +144,7 @@ var CrossDomainInitializer = (function()
 			}
 			else
 			{
-				throw new Error("CrossDomainInitializer._crossFrameMessageHandler() - A message was received from an invalid domain: " + p_event.origin);
+				if (console) console.warn("A message was received from either a domain that timed out or an invalid domain: " + p_event.origin);
 			}
 		};
 		
@@ -144,7 +161,10 @@ var CrossDomainInitializer = (function()
 			{
 				// dispatch a domain error event
 				_instance.eventDispatcher.dispatchEvent(new DomainStatusEvent(DomainStatusEvent.DOMAIN_ERROR), _iframeIdsFromDomains[p_domainUrl]);
+				delete _iframeIdsFromDomains[p_domainUrl];
+				if (console) console.debug("the following domain timed out: " + p_domainUrl);
 			}
+			
 		};
 		
 		

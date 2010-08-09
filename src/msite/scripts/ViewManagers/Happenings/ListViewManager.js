@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		TimS
@@ -48,14 +65,31 @@ var ListViewManager = (function()
 		************************************/
 		
 		/**
-			A The type of list this instance is managing
+			The type of list this instance is managing
+			@type	String
+			@default	""
 		*/
 		this.listType = "";
 		
+		/**
+			The course ID (if one exists for the list) that this instance is managing
+			@type	String
+			@default	null
+		*/
 		this.courseId = null;
-
+		
+		/**
+			The maximum number of items to initially display in the list.
+			@type	Integer
+			@default	5
+		*/
         this.currentDisplayMax = 5;
         
+        /**
+			The maximum number of items to show when the more link is clicked.
+			@type	Integer
+			@default	10
+		*/
         this.moreDisplayCount = 10;
         
 		/************************************
@@ -200,7 +234,7 @@ var ListViewManager = (function()
 		/**
 		    Displays as many of the provided items that it can under this list.  Note: This method 
 		    depends on the items being sent to be in the same order every time this method is called.
-		    @param	{String}	p_items		The items to display in this list
+		    @param	{Array}	p_items		The items to display in this list
 	    */
 		this.displayItems = function(p_items)
 		{				
@@ -276,11 +310,18 @@ var ListViewManager = (function()
 	        }
 		};
 		
+		/**
+			Removes an item from the view.
+			@param	{HappeningItem}	p_item	The item to remove
+		*/
 		this.removeItem = function(p_item)
 		{
 	        $("#" + _getItemListId(p_item)).remove();
 		};
 		
+		/**
+			Increases the list's display limit
+		*/
 		this.increaseItemDisplayLimit = function()
 		{
 		    this.currentDisplayMax = this.currentDisplayMax + this.moreDisplayCount;
@@ -343,11 +384,67 @@ var ListViewManager = (function()
 /************************************
 	Static Properties
 ************************************/
+
+/**
+	Defines the list type for the Happening soon by date list.
+	@static
+	@type	String
+	@default	"byDateHappeningSoon"
+*/
 ListViewManager.BY_DATE_HAPPENING_SOON = "byDateHappeningSoon";
+
+/**
+	Defines the list type for the Things that happened by date list.
+	@static
+	@type	String
+	@default	"byDateThingsThatHappened"
+*/
 ListViewManager.BY_DATE_THINGS_THAT_HAPPENED = "byDateThingsThatHappened";
+
+/**
+	Defines the list type for the Announcements by type list.
+	@static
+	@type	String
+	@default	"byTypeAnnouncements"
+*/
 ListViewManager.BY_TYPE_ANNOUNCEMENTS = "byTypeAnnouncements";
+
+/**
+	Defines the list type for the Happening soon by type list.
+	@static
+	@type	String
+	@default	"byTypeHappeningSoon"
+*/
 ListViewManager.BY_TYPE_HAPPENING_SOON = "byTypeHappeningSoon";
+
+/**
+	Defines the list type for the Grades by type list.
+	@static
+	@type	String
+	@default	"byTypeGrades"
+*/
 ListViewManager.BY_TYPE_GRADES = "byTypeGrades";
+
+/**
+	Defines the list type for the Dropbox by type list.
+	@static
+	@type	String
+	@default	"byTypeDropbox"
+*/
 ListViewManager.BY_TYPE_DROPBOX = "byTypeDropbox";
+
+/**
+	Defines the list type for the Discussion by type list.
+	@static
+	@type	String
+	@default	"byTypeDiscussions"
+*/
 ListViewManager.BY_TYPE_DISCUSSIONS = "byTypeDiscussions";
+
+/**
+	Defines the list type for the by course list.
+	@static
+	@type	String
+	@default	"byCourse"
+*/
 ListViewManager.BY_COURSE = "byCourse";

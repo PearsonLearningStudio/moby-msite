@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		TimS
@@ -45,7 +62,11 @@ var CourseTopicsViewManager = (function()
 		this.initialize = function()
 		{
 		};
-				
+		
+		/**
+			Displays the course topics on the view for a specific course ID
+			@param	{String}	p_courseId	A course ID to show topics for
+		*/
 		this.show = function(p_courseId)
 		{
 			//Show the course list
@@ -71,6 +92,9 @@ var CourseTopicsViewManager = (function()
 			$("li.closedtopic").show();
 		};
 		
+		/**
+			Hides the existing course topics on the view
+		*/
 		this.hide = function()
 		{
 			//Hide the course list

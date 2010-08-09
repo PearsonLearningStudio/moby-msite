@@ -1,4 +1,21 @@
-﻿/**
+﻿/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/**
 	@class
 	@author		MacA
 	
@@ -470,7 +487,33 @@ var MobyWorkflowManager = (function() {
                 _errorViewManager.showGradesErrorMessage();
             }
 		};
-		
+
+
+		/**
+		Handler for when Scheduler (Due Items) data is ready to be displayed.
+		@param	{MobyDataEvent}		p_event		The MobyDataEvent that was dispatched
+		@private
+		*/
+		var _displaySchedulerItems = function(p_event)
+		{
+		    if (p_event.eventData != null)
+		    {
+		        _wmm.mark("happenings.scheduler.items");
+
+		        // create the shceduler DOM elements
+		        _happeningItemManager.addItems(p_event.eventData, _happeningItemManager.convertCourseItem);
+		        _updateListsOnView(_currentViewState);
+
+		        _wmm.measure("Moby.Scheduler.Items.UI.Rendering", "happenings.scheduler.items");
+		    }
+		    else
+		    {
+		        _errorViewManager.showHappeningSoonErrorMessage();
+		    }
+		};
+	
+	
+	
 		/**
 			Handler for when Scheduler (Due Items) data is ready to be displayed.
 			@param	{MobyDataEvent}		p_event		The MobyDataEvent that was dispatched
@@ -805,7 +848,7 @@ var MobyWorkflowManager = (function() {
         var _loadResponsesToTopic = function(p_topic)
         {
 			_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.THREADS_RESPONSES_TO_TOPIC_READY, _displayResponsesToTopic, true);
-			_mobyDataManager.getMobyResponsesToTopic(p_topic.id);
+			_mobyDataManager.getMobyResponsesToTopic(p_topic.topicId);
         };
         
         /**
@@ -948,7 +991,6 @@ var MobyWorkflowManager = (function() {
     				$("#discussions").addClass("navS").removeClass("navNS");
     				$("#happeningsPage").hide();
     				$("#discussionsPage").show();
-	    			
     				_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.THREADS_RESPONSE_BY_ID_READY, _climbResponseHierarchy, true);
 					_mobyDataManager.getMobyResponseById(responseLinkData.responseId);
 				}, true);
@@ -971,7 +1013,7 @@ var MobyWorkflowManager = (function() {
     				$("#discussionsPage").show();
 	    			
     				_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.THREADS_TOPIC_BY_ID_READY, _deepLinkToTopicDetailView, true);
-					_mobyDataManager.getMobyTopicById($("#recentResponsesDetailTopicLink").data("topicId"));
+					_mobyDataManager.getMobyTopicById($("#recentResponsesDetailTopicLink").data("userTopicId"));
 				}, true);
 					
 				_instance.initializePage(PAGE_NAME_DISCUSSIONS);
@@ -1042,7 +1084,7 @@ var MobyWorkflowManager = (function() {
 			Recursively retrieves the parent response for a response until we've reached the top of the 
 			response tree.  We need to do this so that we can recreated the view history correctly
 			when deep linking to a response.
-			@param		{UserThreadResponse}		p_response	The response to retrieve parent information for.
+			@param		{MobyDataEvent}		p_event		The MobyDataEvent that occurred.
 			@return		{none}
 			@private
         */
@@ -1062,11 +1104,10 @@ var MobyWorkflowManager = (function() {
 				if (p_event.eventData.parentResponseId == "" || p_event.eventData.parentResponseId == null || p_event.eventData.parentResponseId == undefined)
 				{
 					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.THREADS_TOPIC_BY_ID_READY, _deepLinkToResponseDetailView, true);
-					_mobyDataManager.getMobyTopicById(p_event.eventData.topicId);
+					_mobyDataManager.getMobyTopicById(p_event.eventData.topic.id);
 				}
 				else
 				{
-					// no need to add another event listener since there is already one in place
 					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.THREADS_RESPONSE_BY_ID_READY, _climbResponseHierarchy, true);
 					_mobyDataManager.getMobyResponseById(p_event.eventData.parentResponseId);
 				}
@@ -1078,7 +1119,7 @@ var MobyWorkflowManager = (function() {
 
         /**
 			Sends the user to the response detail view for their initial screen.
-			@param		{UserThreadResponse}		p_response	The response to display on the detail screen.
+			@param		{MobyDataEvent}		p_event		The MobyDataEvent that occurred.
 			@return		{none}
 			@private
         */
@@ -1094,12 +1135,12 @@ var MobyWorkflowManager = (function() {
                 viewInstance.viewName = "ActiveTopics";
                 viewInstance.viewData = null;
                 _viewHistory.push(viewInstance);
-
                 //Add the topic to the view history
                 viewInstance = new ViewInstance();
                 viewInstance.viewName = "TopicDetail";
                 viewInstance.viewData = p_event.eventData;
                 _viewHistory.push(viewInstance);
+                _topicDetailViewManager.currentTopic = p_event.eventData;
 				
                 //Add each response except the one we're displaying to the view history
                 for (var i = _responseDeepLinkHierarchy.length - 1; i > 0; i--) {
@@ -1207,7 +1248,7 @@ var MobyWorkflowManager = (function() {
         var _loadReponseCountsForTopic = function(p_topic)
         {
 			_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.THREADS_RESPONSE_COUNTS_FOR_TOPIC_READY, _displayResponseCountsForTopic, true);
-			_mobyDataManager.getMobyResponseCountsForTopic(p_topic.id);
+			_mobyDataManager.getMobyResponseCountsForTopic(p_topic.topicId);
 		};
 		
 		var _loadReponseCountsForResponse = function(p_response)
@@ -1306,6 +1347,8 @@ var MobyWorkflowManager = (function() {
                 _topicDetailViewManager.currentTopic.responseCounts.last24HourResponseCount++;
                 _topicDetailViewManager.updateResponseCountsOnView();
                 _topicDetailViewManager.addNewResponseToView(p_event.eventData, _responseClickHandler);
+                // update active topics view as well
+                _activeTopicsViewManager.updateResponseCountsOnView(_topicDetailViewManager.currentTopic.id, _topicDetailViewManager.currentTopic.responseCounts);
                 setTimeout(function() {
                     $("#RespondConfirm").fadeOut(2000, function() {
                         $(this).unbind("click");
@@ -1482,9 +1525,10 @@ var MobyWorkflowManager = (function() {
 					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.COURSE_LIST_READY, _displayCourseList, true);
 					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.ANNOUNCEMENTS_READY, _displayAnnouncements, true);
 					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.GRADES_READY, _displayGrades);
-					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.SCHEDULER_ITEMS_DUE_READY, _displaySchedulerDueItems, true);
-					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.SCHEDULER_ITEMS_START_READY, _displaySchedulerStartItems, true);
-					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.SCHEDULER_ITEMS_END_READY, _displaySchedulerEndItems, true);
+//					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.SCHEDULER_ITEMS_DUE_READY, _displaySchedulerDueItems, true);
+//					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.SCHEDULER_ITEMS_START_READY, _displaySchedulerStartItems, true);
+//					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.SCHEDULER_ITEMS_END_READY, _displaySchedulerEndItems, true);
+					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.SCHEDULER_ITEMS_READY, _displaySchedulerItems, true);
 					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.DROPBOX_READY, _displayDropboxSubmissions, true);
 					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.THREADS_USER_TOPICS_READY, _displayUserTopics, true);
 					_mobyDataManager.eventDispatcher.addEventListener(MobyDataEvent.THREADS_RESPONSES_TO_ME_READY, _displayResponsesToMe, true);

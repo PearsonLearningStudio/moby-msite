@@ -1,4 +1,21 @@
-﻿/**
+﻿/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+/**
 	@class
 	@author		MacA
 	
@@ -190,6 +207,9 @@ var MobyAppInitializer = (function()
 			Public Methods
 		************************************/
 		
+		/**
+			Starts the initialization of the application.
+		*/
 		this.startApplication = function()
 		{
 			// enable tabs
@@ -208,6 +228,7 @@ var MobyAppInitializer = (function()
 			{
 				var clientString = _clientStringManager.getClientString();
 				
+				// Check if we are unsuccessful in finding a client string specified
 				if (clientString == null || clientString == undefined || clientString == "")
 				{
 					// no client string detected, show some error
@@ -217,12 +238,9 @@ var MobyAppInitializer = (function()
 				}
 				else
 				{
-					applyBrandingToPage($("head"), clientString);
 					_mobyWorkflowManager.clientString = clientString;
 					// before we load any pages, lets make sure the user has an access grant of some sort
 					_mobyWorkflowManager.checkForAccessGrant();
-    				
-					
     				
     				_mobyWorkflowManager.eventDispatcher.addEventListener(MobyDataEvent.APPLICATION_ERROR, _applicationErrorHandler);
 					var currentPage = readCookie("currentPage");
@@ -247,6 +265,9 @@ var MobyAppInitializer = (function()
 			
 	    };
 	    
+	    /**
+			Displays an application error message.
+		*/
 	    this.showApplicationErrorMessage = function()
 	    {
 			_mobyWorkflowManager = MobyWorkflowManager.getInstance();

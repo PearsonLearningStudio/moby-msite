@@ -1,3 +1,20 @@
+/*
+ * This software is licensed under the Apache 2 license, quoted below.
+ * 
+ * Copyright 2010 eCollege.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 /**
 	@class
 	@author		MacA
@@ -133,12 +150,26 @@ var CourseListServiceManager = (function()
 			@param	{String}	p_userId			The user ID to get the course list for.
 			@param	{Array}		p_requestHeaders	An array of AjaxRequestHeader objects to attach to the request.
 		*/
+		/*
 		this.getCoursesByUserId = function(p_userId, p_requestHeaders)
 		{
 			VariableValidator.require(this, p_userId, "string");
 			VariableValidator.optional(this, p_requestHeaders, "Array");
 			_wmm.mark("courseList");
 			_ajaxManager.get(this.serviceLocation + "/users/" + p_userId + "/currentcourses?daysafterend=14", p_requestHeaders, _courseListSuccessHandler, _courseListErrorHandler);
+		};
+		*/
+		
+		/**
+			Makes a request to get the list of courses for user that is currently authenticated.
+			
+			@param	{Array}		p_requestHeaders	An array of AjaxRequestHeader objects to attach to the request.
+		*/
+		this.getCoursesForMe = function(p_requestHeaders)
+		{
+			VariableValidator.optional(this, p_requestHeaders, "Array");
+			_wmm.mark("courseList");
+			_ajaxManager.get(this.serviceLocation + "/me/currentcourses?daysafterend=14", p_requestHeaders, _courseListSuccessHandler, _courseListErrorHandler);
 		};
 	}
 	
