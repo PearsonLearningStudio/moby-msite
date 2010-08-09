@@ -6,9 +6,6 @@ for our partners.  While the mSite is a working mobile experience, we are giving
 to the source code so that you can customize your user experience to best suit your
 student/faculty needs.
 
-Online Javadoc is available at: [msite-js][msite-js]
-
-[msite-js]: http://integration.ecollege.com/developers/msite-js/index.html 
 
 Status
 ------
@@ -24,6 +21,11 @@ The mSite release supports the following capabilities:
 - Authentication & Authorization
 - Wrapper for API calls
 - Custom Branding
+
+Online Javadoc is available at: [msite-js][msite-js]
+
+[msite-js]: http://integration.ecollege.com/developers/msite-js/index.html 
+
 
 Currently, Moby services support:
 
@@ -41,3 +43,8 @@ Currently, Moby services support:
    - Respond to Topics and other Responses
 
 
+Downloading the Source
+----------------------
+
+All of our source is available here on github.  The easiest way to download is to select the "Download Source" 
+button at the top right of the screen.  Of course, you're welcome to create your own fork as well.
