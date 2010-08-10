@@ -22,7 +22,7 @@ The mSite release supports the following capabilities:
 - Wrapper for API calls
 - Custom Branding
 
-Online Javadoc is available at: [msite-js][msite-js]
+Online Javadoc is coming soon! 
 
 [msite-js]: http://integration.ecollege.com/developers/msite-js/index.html 
 
